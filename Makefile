@@ -6,6 +6,7 @@ CC=gcc
 CFLAGS=-Wall -pedantic -std=c99 -I$(INCLUDEDIR)
 LDFLAGS=-lm -lcunit
 EXEC=$(BINDIR)/test
+LIB=libjlib
 
 DOCS=doxygen
 DOCSCONFIG=Doxyfile
@@ -14,8 +15,11 @@ DFLAGS=--leak-check=full --show-leak-kinds=all --track-origins=yes
 
 SRC=$(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/**/*.c)
 OBJ=$(SRC:%.c=%.o)
+SHAREDOBJ=$(SRC:%.c=%.relative.o)
 
-all: $(EXEC)
+all: tests build
+
+tests: $(EXEC)
 
 $(EXEC): $(OBJ)
 	@$(CC) -o $@ $(OBJ) $(LDFLAGS)
@@ -28,14 +32,39 @@ $(SRCDIR)/%/%.o: $(SRCDIR)/%/%.c
 
 docs: $(DOCSDIR)
 	mkdir -p $(DOCSDIR)
-	$(DOCS) $(DOCSCONFIG)*
+	$(DOCS) $(DOCSCONFIG)
 
 debug: $(EXEC)
 	$(DEBUG) $(EXEC) $(DFLAGS)
 
-clean:
-	@rm -f ./$(BINDIR)/*
+build: build/static build/dynamic
+
+build/static: $(BINDIR)/lib/$(LIB).a
+
+$(BINDIR)/lib/$(LIB).a: $(OBJ)
+	@mkdir -p $(BINDIR)/lib
+	@ar -rcs $(BINDIR)/lib/$(LIB).a $(OBJ)
+
+build/dynamic: $(BINDIR)/lib/$(LIB).so
+
+$(BINDIR)/lib/$(LIB).so: $(SHAREDOBJ)
+	@mkdir -p $(BINDIR)/lib
+	@$(CC) -shared -o $(BINDIR)/lib/$(LIB).so $(SHAREDOBJ) $(LDFLAGS)
+
+$(SRCDIR)/%.relative.o: $(SRCDIR)/%.c
+	@$(CC) -fPIC -o $@ -c $< $(CFLAGS)
+
+$(SRCDIR)/%/%.relative.o: $(SRCDIR)/%/%.c
+	@$(CC) -fPIC -o $@ -c $< $(CFLAGS)
+
+clean: clean/objects clean/exec clean/docs
+
+clean/objects:
 	@rm -f ./$(SRCDIR)/*.o
 	@rm -f ./$(SRCDIR)/**/*.o
+
+clean/exec:
 	@rm -f ./$(EXEC)
+
+clean/docs:
 	@rm -rf ./$(DOCSDIR)
