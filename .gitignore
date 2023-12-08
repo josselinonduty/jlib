@@ -1,0 +1,12 @@
+bin
+.vscode
+*.code-workspace
+
+*.tmp
+tmp.*
+*.log
+*.cache
+
+*.o
+docs
+*.cache
