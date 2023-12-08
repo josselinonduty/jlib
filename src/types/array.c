@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <errno.h>
 
 #include "base/generic.h"
@@ -245,8 +246,24 @@ void array_print(array_t array, generic_print print_fn)
 }
 
 /**
- * @todo Implement this function.
+ * @brief Resize an array.
+ * @param array The array to resize.
+ * @param capacity The new capacity of the array.
+ * @return array_t
  */
 void array_resize(array_t *array, size_t capacity)
 {
+    if (capacity < array->size)
+    {
+        errno = EINVAL;
+        return;
+    }
+
+    array_t new_array = array_create(capacity, array->element_size, array->copy, array->free);
+    memcpy(new_array.data, array->data, array->size * array->element_size);
+    new_array.size = array->size;
+
+    array_destroy(array);
+    *array = new_array;
+    errno = 0;
 }

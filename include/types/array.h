@@ -30,5 +30,6 @@ size_t array_capacity(array_t array);
 bool array_is_empty(array_t array);
 bool array_is_full(array_t array);
 void array_print(array_t array, generic_print print_fn);
+void array_resize(array_t *array, size_t capacity);
 
 #endif

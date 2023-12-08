@@ -130,3 +130,32 @@ void test_array_insert(void)
 
     array_destroy(&array);
 }
+
+void test_array_resize(void)
+{
+    size_t capacity = 100;
+    array_t array = array_create(capacity, int_size, int_copy, int_free);
+
+    long int count = 42;
+    long int total = 0;
+    for (long int i = 0; i < count; i++)
+    {
+        array_push(&array, &i);
+        total += i;
+    }
+
+    size_t new_capacity = 200;
+    array_resize(&array, new_capacity);
+
+    CU_ASSERT_EQUAL(array_capacity(array), new_capacity);
+    CU_ASSERT_EQUAL(array_size(array), count);
+
+    long int sum = 0;
+    for (size_t i = 0; i < count; i++)
+    {
+        sum += *(int *)(array_get(array, i));
+    }
+    CU_ASSERT_EQUAL(sum, total);
+
+    array_destroy(&array);
+}

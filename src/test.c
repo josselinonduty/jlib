@@ -63,7 +63,8 @@ int main(void)
         NULL == CU_add_test(pSuite, "array_add()", test_array_add) ||
         NULL == CU_add_test(pSuite, "array_add_multiple()", test_array_add_multiple) ||
         NULL == CU_add_test(pSuite, "array_add_overflow()", test_array_add_overflow) ||
-        NULL == CU_add_test(pSuite, "array_insert()", test_array_insert))
+        NULL == CU_add_test(pSuite, "array_insert()", test_array_insert) ||
+        NULL == CU_add_test(pSuite, "array_resize()", test_array_resize))
     {
         CU_cleanup_registry();
         return CU_get_error();
