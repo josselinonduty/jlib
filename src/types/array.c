@@ -23,7 +23,7 @@
  * @param free_fn The function to free an element.
  * @return array_t
  */
-array_t array_create(size_t capacity, size_t element_size, generic_copy copy_fn, generic_free free_fn)
+array_t array_create(long int capacity, long int element_size, generic_copy copy_fn, generic_free free_fn)
 {
     array_t array;
     array.capacity = capacity;
@@ -65,7 +65,7 @@ any *__array_data(array_t array)
  * @param index The index to get the element from.
  * @return any* The position of the element in memory.
  */
-any *__array_element_position_in_memory(array_t array, size_t index)
+any *__array_element_position_in_memory(array_t array, long int index)
 {
     return array.data + index * array.element_size;
 }
@@ -112,7 +112,7 @@ void array_pop(array_t array)
  * @param array The array to remove the element from.
  * @param index The index to remove the element from.
  */
-void array_remove(array_t array, size_t index)
+void array_remove(array_t array, long int index)
 {
     if (index >= array.capacity)
     {
@@ -131,7 +131,7 @@ void array_remove(array_t array, size_t index)
  * @param index The index to insert the element at.
  * @param element The element to insert.
  */
-void array_insert(array_t *array, size_t index, any element)
+void array_insert(array_t *array, long int index, any element)
 {
     if (index >= array->size)
     {
@@ -155,7 +155,7 @@ void array_insert(array_t *array, size_t index, any element)
  * @param array The array to get the element from.
  * @param index The index to get the element from.
  */
-any array_get(array_t array, size_t index)
+any array_get(array_t array, long int index)
 {
     if (index >= array.capacity)
     {
@@ -172,7 +172,7 @@ any array_get(array_t array, size_t index)
  * @param index The index to set the element at.
  * @param element The element to set.
  */
-void array_set(array_t *array, size_t index, any element)
+void array_set(array_t *array, long int index, any element)
 {
     if (index >= array->capacity)
     {
@@ -195,7 +195,7 @@ void array_set(array_t *array, size_t index, any element)
  * @param array The array to get the size from.
  * @return long int
  */
-size_t array_size(array_t array)
+long int array_size(array_t array)
 {
     return array.size;
 }
@@ -205,7 +205,7 @@ size_t array_size(array_t array)
  * @param array The array to get the capacity from.
  * @return long int
  */
-size_t array_capacity(array_t array)
+long int array_capacity(array_t array)
 {
     return array.capacity;
 }
@@ -251,7 +251,7 @@ void array_print(array_t array, generic_print print_fn)
  * @param capacity The new capacity of the array.
  * @return array_t
  */
-void array_resize(array_t *array, size_t capacity)
+void array_resize(array_t *array, long int capacity)
 {
     if (capacity < array->size)
     {
