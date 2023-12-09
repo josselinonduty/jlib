@@ -5,7 +5,7 @@ DOCSDIR=docs
 CC=gcc
 CFLAGS=-Wall -pedantic -std=c99 -I$(INCLUDEDIR)
 LDFLAGS=-lm -lcunit
-EXEC=$(BINDIR)/test
+EXEC=$(BINDIR)/tests
 LIB=libjlib
 
 DOCS=doxygen
@@ -17,11 +17,12 @@ SRC=$(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/**/*.c)
 OBJ=$(SRC:%.c=%.o)
 SHAREDOBJ=$(SRC:%.c=%.relative.o)
 
-all: tests build
+all: bin build tests
 
-tests: $(EXEC)
+bin: $(EXEC)
 
 $(EXEC): $(OBJ)
+	@mkdir -p $(BINDIR)
 	@$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
 $(SRCDIR)/%.o: $(SRCDIR)/%.c
@@ -56,6 +57,10 @@ $(SRCDIR)/%.relative.o: $(SRCDIR)/%.c
 
 $(SRCDIR)/%/%.relative.o: $(SRCDIR)/%/%.c
 	@$(CC) -fPIC -o $@ -c $< $(CFLAGS)
+
+tests: $(EXEC)
+	ls -l .
+	@./$(EXEC)
 
 clean: clean/objects clean/exec clean/docs
 
