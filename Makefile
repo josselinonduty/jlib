@@ -17,7 +17,7 @@ SRC=$(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/**/*.c)
 OBJ=$(SRC:%.c=%.o)
 SHAREDOBJ=$(SRC:%.c=%.relative.o)
 
-all: bin build tests
+all: bin
 
 bin: $(EXEC)
 
@@ -59,7 +59,6 @@ $(SRCDIR)/%/%.relative.o: $(SRCDIR)/%/%.c
 	@$(CC) -fPIC -o $@ -c $< $(CFLAGS)
 
 tests: $(EXEC)
-	ls -l .
 	@./$(EXEC)
 
 clean: clean/objects clean/exec clean/docs
@@ -73,3 +72,6 @@ clean/exec:
 
 clean/docs:
 	@rm -rf ./$(DOCSDIR)
+
+install/debian:
+	apt install libcunit1 libcunit1-doc libcunit1-dev
