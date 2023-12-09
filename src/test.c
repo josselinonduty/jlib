@@ -75,7 +75,5 @@ int main(void)
     CU_basic_show_failures(CU_get_failure_list());
     printf("\n");
 
-    CU_cleanup_registry();
-
-    return CU_get_error();
+    return CU_get_number_of_tests_failed() > 0;
 }
