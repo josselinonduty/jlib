@@ -74,4 +74,4 @@ clean/docs:
 	@rm -rf ./$(DOCSDIR)
 
 install/debian:
-	apt install libcunit1 libcunit1-doc libcunit1-dev
+	apt-get install libcunit1 libcunit1-doc libcunit1-dev

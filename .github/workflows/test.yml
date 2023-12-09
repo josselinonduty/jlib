@@ -11,7 +11,7 @@ jobs:
         run: sudo apt-get update
       - uses: actions/checkout@v4
       - name: Install
-        run: make install/debian
+        run: sudo make install/debian
       - name: Compile
         run: make bin
       - name: Test
