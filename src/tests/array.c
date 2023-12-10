@@ -2,7 +2,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include "types/array.h"
-#include "types/types.h"
+#include "types/int.h"
 #include "tests.h"
 
 void test_array_create(void)

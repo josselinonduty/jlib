@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include "base/generic.h"
-#include "types/types.h"
+#include "types/int.h"
 
 /**
  * @brief Copies an integer based on the generic copy function.

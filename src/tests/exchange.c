@@ -1,7 +1,7 @@
 #include <CUnit/CUnit.h>
 #include "utilities/exchange.h"
 #include "base/generic.h"
-#include "types/types.h"
+#include "types/int.h"
 #include "tests.h"
 #include <stdio.h>
 
