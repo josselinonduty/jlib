@@ -13,15 +13,29 @@
  */
 any string_copy(any value)
 {
-    string copy = malloc(string_size);
+    string *str = (string *)value;
+    if (NULL == str)
+    {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    string *copy = malloc(sizeof(string));
     if (NULL == copy)
     {
         errno = ENOMEM;
         return NULL;
     }
 
-    strcpy(copy, value);
+    *copy = malloc(strlen(*str) + 1);
+    if (NULL == *copy)
+    {
+        errno = ENOMEM;
+        free(copy);
+        return NULL;
+    }
 
+    strcpy(*copy, *str);
     return copy;
 }
 
@@ -31,9 +45,9 @@ any string_copy(any value)
  */
 void string_free(any value)
 {
-    string *v = (string *)value;
-    free(*v);
-    *v = NULL;
+    free(*(string *)value);
+    *(string *)value = NULL;
+    free(value);
 }
 
 /**
