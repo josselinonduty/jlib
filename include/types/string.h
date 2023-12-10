@@ -5,7 +5,6 @@
 #include "base/generic.h"
 
 typedef char *string;
-static size_t const string_size = sizeof(string);
 any string_copy(any);
 void string_free(any);
 bool string_equal(any, any);

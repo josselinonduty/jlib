@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include "base/generic.h"
 
-static size_t const int_size = sizeof(long int);
 any int_copy(any);
 void int_free(any);
 bool int_equal(any, any);
