@@ -1,7 +1,10 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 
-#include "tests.h"
+#include "tests/utilities.h"
+#include "tests/int.h"
+#include "tests/string.h"
+#include "tests/array.h"
 
 int init_suite(void)
 {
@@ -43,7 +46,9 @@ int main(void)
 
     if (NULL == CU_add_test(pSuite, "int_copy()", test_int_copy) ||
         NULL == CU_add_test(pSuite, "int_equal()", test_int_equal) ||
-        NULL == CU_add_test(pSuite, "int_leq()", test_int_leq))
+        NULL == CU_add_test(pSuite, "int_leq()", test_int_leq) ||
+        NULL == CU_add_test(pSuite, "string_copy()", test_string_copy) ||
+        NULL == CU_add_test(pSuite, "string_equal()", test_string_equal))
     {
         CU_cleanup_registry();
         return CU_get_error();

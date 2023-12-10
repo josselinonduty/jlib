@@ -1,8 +1,8 @@
 #include <CUnit/CUnit.h>
 #include "utilities/exchange.h"
 #include "base/generic.h"
-#include "types/types.h"
-#include "tests.h"
+#include "types/int.h"
+#include "tests/utilities.h"
 #include <stdio.h>
 
 void test_utils_exchange(void)

@@ -1,8 +1,8 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 
-#include "types/types.h"
-#include "tests.h"
+#include "types/int.h"
+#include "tests/int.h"
 
 void test_int_copy(void)
 {

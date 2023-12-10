@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include "base/generic.h"
-#include "types/types.h"
+#include "types/int.h"
 
 /**
  * @brief Copies an integer based on the generic copy function.
@@ -13,14 +13,14 @@
  */
 any int_copy(any value)
 {
-    any copy = malloc(int_size);
+    any copy = malloc(sizeof(long int));
     if (NULL == copy)
     {
         errno = ENOMEM;
         return NULL;
     }
 
-    memcpy(copy, value, int_size);
+    memcpy(copy, value, sizeof(long int));
 
     return copy;
 }
