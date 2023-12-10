@@ -2,7 +2,7 @@
 #include "utilities/exchange.h"
 #include "base/generic.h"
 #include "types/int.h"
-#include "tests.h"
+#include "tests/utilities.h"
 #include <stdio.h>
 
 void test_utils_exchange(void)

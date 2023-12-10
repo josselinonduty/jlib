@@ -1,7 +1,10 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 
-#include "tests.h"
+#include "tests/utilities.h"
+#include "tests/int.h"
+#include "tests/string.h"
+#include "tests/array.h"
 
 int init_suite(void)
 {
