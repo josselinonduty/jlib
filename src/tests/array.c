@@ -30,6 +30,7 @@ void test_array_free(void)
 {
     errno = 0;
     long int capacity = 100;
+    long int capacity = 100;
     long int count = 100000;
     for (long int i = 0; i < count; i++)
     {
@@ -73,9 +74,10 @@ void test_array_add_multiple(void)
 
     long int sum = 0;
     for (long int i = 0; i < count; i++)
-    {
-        sum += *(int *)(array_get(array, i));
-    }
+        for (long int i = 0; i < count; i++)
+        {
+            sum += *(int *)(array_get(array, i));
+        }
     CU_ASSERT_EQUAL(sum, total);
 
     array_destroy(&array);
@@ -123,9 +125,10 @@ void test_array_insert(void)
 
     long int sum = 0;
     for (long int i = 0; i < count + 1; i++)
-    {
-        sum += *(int *)(array_get(array, i));
-    }
+        for (long int i = 0; i < count + 1; i++)
+        {
+            sum += *(int *)(array_get(array, i));
+        }
     CU_ASSERT_EQUAL(sum, total + value);
 
     array_destroy(&array);
@@ -145,6 +148,7 @@ void test_array_resize(void)
     }
 
     long int new_capacity = 200;
+    long int new_capacity = 200;
     array_resize(&array, new_capacity);
 
     CU_ASSERT_EQUAL(array_capacity(array), new_capacity);
@@ -152,9 +156,10 @@ void test_array_resize(void)
 
     long int sum = 0;
     for (long int i = 0; i < count; i++)
-    {
-        sum += *(int *)(array_get(array, i));
-    }
+        for (long int i = 0; i < count; i++)
+        {
+            sum += *(int *)(array_get(array, i));
+        }
     CU_ASSERT_EQUAL(sum, total);
 
     array_destroy(&array);
