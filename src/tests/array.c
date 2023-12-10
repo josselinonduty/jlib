@@ -30,7 +30,6 @@ void test_array_free(void)
 {
     errno = 0;
     long int capacity = 100;
-    long int capacity = 100;
     long int count = 100000;
     for (long int i = 0; i < count; i++)
     {
@@ -147,7 +146,6 @@ void test_array_resize(void)
         total += i;
     }
 
-    long int new_capacity = 200;
     long int new_capacity = 200;
     array_resize(&array, new_capacity);
 
