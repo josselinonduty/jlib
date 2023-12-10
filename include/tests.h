@@ -9,6 +9,9 @@ void test_int_copy(void);
 void test_int_equal(void);
 void test_int_leq(void);
 
+void test_string_copy(void);
+void test_string_equal(void);
+
 void test_array_create(void);
 void test_array_destroy(void);
 void test_array_free(void);
