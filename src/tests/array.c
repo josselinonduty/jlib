@@ -73,10 +73,9 @@ void test_array_add_multiple(void)
 
     long int sum = 0;
     for (long int i = 0; i < count; i++)
-        for (long int i = 0; i < count; i++)
-        {
-            sum += *(int *)(array_get(array, i));
-        }
+    {
+        sum += *(int *)(array_get(array, i));
+    }
     CU_ASSERT_EQUAL(sum, total);
 
     array_destroy(&array);
@@ -124,10 +123,9 @@ void test_array_insert(void)
 
     long int sum = 0;
     for (long int i = 0; i < count + 1; i++)
-        for (long int i = 0; i < count + 1; i++)
-        {
-            sum += *(int *)(array_get(array, i));
-        }
+    {
+        sum += *(int *)(array_get(array, i));
+    }
     CU_ASSERT_EQUAL(sum, total + value);
 
     array_destroy(&array);
@@ -154,10 +152,9 @@ void test_array_resize(void)
 
     long int sum = 0;
     for (long int i = 0; i < count; i++)
-        for (long int i = 0; i < count; i++)
-        {
-            sum += *(int *)(array_get(array, i));
-        }
+    {
+        sum += *(int *)(array_get(array, i));
+    }
     CU_ASSERT_EQUAL(sum, total);
 
     array_destroy(&array);
