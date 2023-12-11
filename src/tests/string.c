@@ -16,5 +16,5 @@ void test_string_equal(void)
     string a = "Hello, World!";
     string b = "Hello, World!";
 
-    CU_ASSERT_TRUE(string_equal(a, b));
+    CU_ASSERT_TRUE(string_equal(&a, &b));
 }
