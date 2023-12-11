@@ -30,8 +30,8 @@ jobs:
           echo "PREVIOUS_TAG=${PREVIOUS_TAG}"
           echo "RELEASE_TAG=${RELEASE_TAG}"
 
-          IS_WIP=$([ "${PREVIOUS_TAG}" == "${RELEASE_TAG}" ] && echo "true" || echo "false")
-          if [ "${IS_WIP}" == "true" ]; then
+          IS_WIP=$([ "${PREVIOUS_TAG}" = "${RELEASE_TAG}" ] && echo "true" || echo "false")
+          if [ "${IS_WIP}" = "true" ]; then
               RELEASE_TAG=$(git describe --tags HEAD)
           fi
 
