@@ -20,10 +20,23 @@ jobs:
         run: make build
       - name: Changelog
         run: make changelog
+      - name: Version
+        id: version
+        shell: bash
+        run: |
+          RELEASE_TAG=$(git describe --tags --abbrev=0 HEAD)
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
+
+          IS_WIP=$([ "${PREVIOUS_TAG}" == "${RELEASE_TAG}" ] && echo "true" || echo "false")
+          if [ "${IS_WIP}" == "true" ]; then
+              RELEASE_TAG=$(git describe --tags HEAD)
+          fi
+
+          echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_OUTPUT
       - uses: ncipollo/release-action@v1
         name: Release
         with:
           bodyFile: "CHANGELOG.md"
           artifacts: "bin/lib/*.a"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref }}
+          tag: ${{ steps.version.outputs.RELEASE_TAG }}
