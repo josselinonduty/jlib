@@ -58,7 +58,7 @@ void string_free(any value)
  */
 bool string_equal(any a, any b)
 {
-    return strcmp((string)a, (string)b) == 0;
+    return strcmp(*(string *)a, *(string *)b) == 0;
 }
 
 /**
@@ -67,5 +67,5 @@ bool string_equal(any a, any b)
  */
 void string_print(any value)
 {
-    printf("%s", (string)value);
+    printf("%s", *(string *)value);
 }

@@ -5,6 +5,7 @@
 #include "tests/int.h"
 #include "tests/string.h"
 #include "tests/array.h"
+#include "tests/linked_list.h"
 
 int init_suite(void)
 {
@@ -70,6 +71,25 @@ int main(void)
         NULL == CU_add_test(pSuite, "array_add_overflow()", test_array_add_overflow) ||
         NULL == CU_add_test(pSuite, "array_insert()", test_array_insert) ||
         NULL == CU_add_test(pSuite, "array_resize()", test_array_resize))
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    pSuite = CU_add_suite("Linked List", init_suite, clean_suite);
+    if (NULL == pSuite)
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if (
+        NULL == CU_add_test(pSuite, "linked_list_empty()", test_linked_list_empty) ||
+        NULL == CU_add_test(pSuite, "linked_list_add_int()", test_linked_list_add_int) ||
+        NULL == CU_add_test(pSuite, "linked_list_overflow_int()", test_linked_list_overflow_int) ||
+        NULL == CU_add_test(pSuite, "linked_list_add_string()", test_linked_list_add_string) ||
+        NULL == CU_add_test(pSuite, "linked_list_overflow_string()", test_linked_list_overflow_string) ||
+        NULL == CU_add_test(pSuite, "linked_list_remove()", test_linked_list_remove_string))
     {
         CU_cleanup_registry();
         return CU_get_error();
