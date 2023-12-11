@@ -24,8 +24,8 @@ jobs:
         id: version
         shell: bash
         run: |
-          RELEASE_TAG=$(git describe --abbrev=0 HEAD)
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
+          RELEASE_TAG=$(git describe --abbrev=0 HEAD --always)
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ --always)
 
           echo "PREVIOUS_TAG=${PREVIOUS_TAG}"
           echo "RELEASE_TAG=${RELEASE_TAG}"
