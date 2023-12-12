@@ -1,4 +1,5 @@
 #include <CUnit/CUnit.h>
+#include <stdlib.h>
 
 #include "base/linked_list.h"
 #include "base/int.h"
@@ -37,6 +38,33 @@ void test_linked_list_add_int(void)
     CU_ASSERT_EQUAL(linked_list_length(ls), 3);
     CU_ASSERT_TRUE(int_equal(linked_list_get_data(ls), &c));
     CU_ASSERT_TRUE(int_equal(linked_list_get_data(linked_list_get_next(ls)), &b));
+
+    linked_list_destroy(&ls, int_free);
+
+    CU_ASSERT_TRUE(linked_list_is_empty(ls));
+}
+
+void test_linked_list_add_sorted_int(void)
+{
+    linked_list ls = linked_list_create();
+
+    int count = 42;
+
+    for (int i = 0; i < count; i++)
+    {
+        int random = rand() % count;
+        linked_list_add_sorted(&ls, &random, int_copy, int_geq);
+    }
+
+    CU_ASSERT_FALSE(linked_list_is_empty(ls));
+
+    bool sorted = true;
+    for (int i = 0; i < count - 1; i++)
+    {
+        sorted &= int_leq(linked_list_get_data(ls), linked_list_get_data(linked_list_get_next(ls)));
+        linked_list_remove(&ls, int_free);
+    }
+    CU_ASSERT_TRUE(sorted);
 
     linked_list_destroy(&ls, int_free);
 

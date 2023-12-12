@@ -87,6 +87,25 @@ void linked_list_add(linked_list *ls, any data, generic_copy copy_fn)
     *ls = new_node;
 }
 
+void linked_list_add_sorted(linked_list *ls, any data, generic_copy copy, generic_compare compare)
+{
+    if (linked_list_is_empty(*ls))
+    {
+        linked_list_add(ls, data, copy);
+        return;
+    }
+
+    if (compare(linked_list_get_data(*ls), data))
+    {
+        linked_list_add(ls, data, copy);
+        return;
+    }
+
+    linked_list next = linked_list_get_next(*ls);
+    linked_list_add_sorted(&next, data, copy, compare);
+    linked_list_set_next(*ls, next);
+}
+
 // Delete head node
 void linked_list_remove(linked_list *ls, generic_free free_fn)
 {
