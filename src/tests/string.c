@@ -1,5 +1,5 @@
 #include <CUnit/CUnit.h>
-#include "types/string.h"
+#include "base/string.h"
 #include "tests/string.h"
 
 void test_string_copy(void)

@@ -4,7 +4,7 @@
 #include <errno.h>
 
 #include "base/generic.h"
-#include "types/binary_tree.h"
+#include "base/binary_tree.h"
 
 binary_tree binary_tree_create(any data, generic_copy copy_fn)
 {

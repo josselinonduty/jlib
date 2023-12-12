@@ -1,8 +1,8 @@
 #include <CUnit/CUnit.h>
 
-#include "types/linked_list.h"
-#include "types/int.h"
-#include "types/string.h"
+#include "base/linked_list.h"
+#include "base/int.h"
+#include "base/string.h"
 
 #include "tests/linked_list.h"
 
