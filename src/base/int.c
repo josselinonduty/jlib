@@ -64,6 +64,17 @@ bool int_leq(any a, any b)
  * @param b The second integer.
  * @return bool True if the first integer is less than the second, false otherwise.
  */
+bool int_geq(any a, any b)
+{
+    return *(int *)a >= *(int *)b;
+}
+
+/**
+ * @brief Compares two integers based on the generic compare function.
+ * @param a The first integer.
+ * @param b The second integer.
+ * @return bool True if the first integer is less than the second, false otherwise.
+ */
 void int_print(any value)
 {
     printf("%d", *(int *)value);

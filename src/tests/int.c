@@ -30,3 +30,13 @@ void test_int_leq(void)
     CU_ASSERT_TRUE(int_leq(&a, &a));
     CU_ASSERT_FALSE(int_leq(&b, &a));
 }
+
+void test_int_geq(void)
+{
+    int a = 41;
+    int b = 42;
+
+    CU_ASSERT_FALSE(int_geq(&a, &b));
+    CU_ASSERT_TRUE(int_geq(&b, &b));
+    CU_ASSERT_TRUE(int_geq(&b, &a));
+}
