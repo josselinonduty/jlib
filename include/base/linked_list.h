@@ -87,6 +87,15 @@ long int linked_list_length(linked_list ls);
 void linked_list_add(linked_list *ls, any data, generic_copy copy);
 
 /**
+ * @brief Adds a node to a linked list in a sorted way
+ * @param ls Linked list
+ * @param data Data
+ * @param copy Copy function
+ * @param compare Compare function
+ */
+void linked_list_add_sorted(linked_list *ls, any data, generic_copy copy, generic_compare compare);
+
+/**
  * @brief Removes a node from a linked list
  * @param ls Linked list
  * @param free Free function

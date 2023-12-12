@@ -88,6 +88,7 @@ int main(void)
     if (
         NULL == CU_add_test(pSuite, "linked_list_empty()", test_linked_list_empty) ||
         NULL == CU_add_test(pSuite, "linked_list_add_int()", test_linked_list_add_int) ||
+        NULL == CU_add_test(pSuite, "test_linked_list_add_sorted_int()", test_linked_list_add_sorted_int) ||
         NULL == CU_add_test(pSuite, "linked_list_overflow_int()", test_linked_list_overflow_int) ||
         NULL == CU_add_test(pSuite, "linked_list_add_string()", test_linked_list_add_string) ||
         NULL == CU_add_test(pSuite, "linked_list_overflow_string()", test_linked_list_overflow_string) ||
