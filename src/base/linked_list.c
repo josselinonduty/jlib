@@ -4,7 +4,7 @@
 #include <errno.h>
 
 #include "base/generic.h"
-#include "types/linked_list.h"
+#include "base/linked_list.h"
 
 linked_list linked_list_create()
 {

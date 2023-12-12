@@ -1,8 +1,8 @@
 #include <CUnit/CUnit.h>
 #include <errno.h>
 #include <stdio.h>
-#include "types/array.h"
-#include "types/int.h"
+#include "base/array.h"
+#include "base/int.h"
 #include "tests/array.h"
 
 void test_array_create(void)

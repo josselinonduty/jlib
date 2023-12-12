@@ -1,8 +1,8 @@
 #include <CUnit/CUnit.h>
 
 #include "base/generic.h"
-#include "types/int.h"
-#include "types/binary_tree.h"
+#include "base/int.h"
+#include "base/binary_tree.h"
 
 void test_binary_tree_create(void)
 {
