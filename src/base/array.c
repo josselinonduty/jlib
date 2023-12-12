@@ -13,7 +13,7 @@
 #include <errno.h>
 
 #include "base/generic.h"
-#include "types/array.h"
+#include "base/array.h"
 
 /**
  * @brief Create a new dynamic array.

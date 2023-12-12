@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include "base/generic.h"
-#include "types/string.h"
+#include "base/string.h"
 
 /**
  * @brief Copies a string based on the generic copy function.
