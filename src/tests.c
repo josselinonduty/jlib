@@ -6,6 +6,7 @@
 #include "tests/string.h"
 #include "tests/array.h"
 #include "tests/linked_list.h"
+#include "tests/doubly_linked_list.h"
 #include "tests/binary_tree.h"
 
 int init_suite(void)
@@ -93,6 +94,26 @@ int main(void)
         NULL == CU_add_test(pSuite, "linked_list_add_string()", test_linked_list_add_string) ||
         NULL == CU_add_test(pSuite, "linked_list_overflow_string()", test_linked_list_overflow_string) ||
         NULL == CU_add_test(pSuite, "linked_list_remove()", test_linked_list_remove_string))
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    pSuite = CU_add_suite("Doubly Linked List", init_suite, clean_suite);
+    if (NULL == pSuite)
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if (
+        NULL == CU_add_test(pSuite, "doubly_linked_list_empty()", test_doubly_linked_list_empty) ||
+        NULL == CU_add_test(pSuite, "doubly_linked_list_add_int()", test_doubly_linked_list_add_int) ||
+        NULL == CU_add_test(pSuite, "doubly_linked_list_add_sorted_int()", test_doubly_linked_list_add_sorted_int) ||
+        NULL == CU_add_test(pSuite, "doubly_linked_list_overflow_int()", test_doubly_linked_list_overflow_int) ||
+        NULL == CU_add_test(pSuite, "doubly_linked_list_add_string()", test_doubly_linked_list_add_string) ||
+        NULL == CU_add_test(pSuite, "doubly_linked_list_overflow_string()", test_doubly_linked_list_overflow_string) ||
+        NULL == CU_add_test(pSuite, "doubly_linked_list_remove()", test_doubly_linked_list_remove_string))
     {
         CU_cleanup_registry();
         return CU_get_error();
