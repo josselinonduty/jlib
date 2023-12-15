@@ -8,6 +8,7 @@
 #include "tests/linked_list.h"
 #include "tests/doubly_linked_list.h"
 #include "tests/binary_tree.h"
+#include "tests/queue.h"
 
 int init_suite(void)
 {
@@ -131,6 +132,22 @@ int main(void)
         NULL == CU_add_test(pSuite, "binary_tree_add()", test_binary_tree_add) ||
         NULL == CU_add_test(pSuite, "binary_tree_add_overflow()", test_binary_tree_add_overflow) ||
         NULL == CU_add_test(pSuite, "binary_tree_remove()", test_binary_tree_remove))
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    pSuite = CU_add_suite("Queue", init_suite, clean_suite);
+    if (NULL == pSuite)
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if (
+        NULL == CU_add_test(pSuite, "queue_create()", test_queue_create) ||
+        NULL == CU_add_test(pSuite, "queue_add()", test_queue_add) ||
+        NULL == CU_add_test(pSuite, "queue_add_overflow()", test_queue_add_overflow))
     {
         CU_cleanup_registry();
         return CU_get_error();
