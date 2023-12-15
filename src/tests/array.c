@@ -1,14 +1,14 @@
 #include <CUnit/CUnit.h>
 #include <errno.h>
 #include <stdio.h>
-#include "types/array.h"
-#include "types/types.h"
-#include "tests.h"
+#include "base/array.h"
+#include "base/int.h"
+#include "tests/array.h"
 
 void test_array_create(void)
 {
     long int capacity = 100;
-    array_t array = array_create(capacity, int_size, int_copy, int_free);
+    array_t array = array_create(capacity, sizeof(long int), int_copy, int_free);
 
     CU_ASSERT_EQUAL(array_capacity(array), capacity);
     CU_ASSERT_EQUAL(array_size(array), 0);
@@ -20,7 +20,7 @@ void test_array_create(void)
 void test_array_destroy(void)
 {
     long int capacity = 100;
-    array_t array = array_create(capacity, int_size, int_copy, int_free);
+    array_t array = array_create(capacity, sizeof(long int), int_copy, int_free);
 
     array_destroy(&array);
     CU_ASSERT_PTR_EQUAL(__array_data(array), NULL);
@@ -33,7 +33,7 @@ void test_array_free(void)
     long int count = 100000;
     for (long int i = 0; i < count; i++)
     {
-        array_t array = array_create(capacity, int_size, int_copy, int_free);
+        array_t array = array_create(capacity, sizeof(long int), int_copy, int_free);
         array_destroy(&array);
     }
 
@@ -43,7 +43,7 @@ void test_array_free(void)
 void test_array_add(void)
 {
     long int capacity = 100;
-    array_t array = array_create(capacity, int_size, int_copy, int_free);
+    array_t array = array_create(capacity, sizeof(long int), int_copy, int_free);
 
     long int value = 42;
     array_push(&array, &value);
@@ -58,7 +58,7 @@ void test_array_add(void)
 void test_array_add_multiple(void)
 {
     long int capacity = 100;
-    array_t array = array_create(capacity, int_size, int_copy, int_free);
+    array_t array = array_create(capacity, sizeof(long int), int_copy, int_free);
 
     long int count = 42;
     long int total = 0;
@@ -84,7 +84,7 @@ void test_array_add_multiple(void)
 void test_array_add_overflow(void)
 {
     long int capacity = 100;
-    array_t array = array_create(capacity, int_size, int_copy, int_free);
+    array_t array = array_create(capacity, sizeof(long int), int_copy, int_free);
 
     long int count = capacity + 1;
 
@@ -105,7 +105,7 @@ void test_array_add_overflow(void)
 void test_array_insert(void)
 {
     long int capacity = 100;
-    array_t array = array_create(capacity, int_size, int_copy, int_free);
+    array_t array = array_create(capacity, sizeof(long int), int_copy, int_free);
 
     long int count = 42;
     long int total = 0;
@@ -134,7 +134,7 @@ void test_array_insert(void)
 void test_array_resize(void)
 {
     long int capacity = 100;
-    array_t array = array_create(capacity, int_size, int_copy, int_free);
+    array_t array = array_create(capacity, sizeof(long int), int_copy, int_free);
 
     long int count = 42;
     long int total = 0;

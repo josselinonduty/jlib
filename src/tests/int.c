@@ -1,8 +1,8 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 
-#include "types/types.h"
-#include "tests.h"
+#include "base/int.h"
+#include "tests/int.h"
 
 void test_int_copy(void)
 {
@@ -29,4 +29,14 @@ void test_int_leq(void)
     CU_ASSERT_TRUE(int_leq(&a, &b));
     CU_ASSERT_TRUE(int_leq(&a, &a));
     CU_ASSERT_FALSE(int_leq(&b, &a));
+}
+
+void test_int_geq(void)
+{
+    int a = 41;
+    int b = 42;
+
+    CU_ASSERT_FALSE(int_geq(&a, &b));
+    CU_ASSERT_TRUE(int_geq(&b, &b));
+    CU_ASSERT_TRUE(int_geq(&b, &a));
 }
