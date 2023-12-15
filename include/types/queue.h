@@ -100,4 +100,11 @@ any queue_dequeue(queue *q);
  */
 void queue_print(queue q, generic_print print_fn);
 
+/**
+ * @brief Print the queue inline
+ * @param q queue
+ * @param print_fn Generic print function
+ */
+void queue_print_inline(queue q, generic_print print_fn);
+
 #endif // __QUEUE_H__

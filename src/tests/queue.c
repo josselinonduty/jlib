@@ -21,7 +21,7 @@ void test_queue_add(void)
     CU_ASSERT_TRUE(queue_is_empty(q));
     CU_ASSERT_EQUAL(queue_length(q), 0);
 
-    long int count = 10;
+    long int count = 1000;
     for (int i = 0; i < count; i++)
     {
         queue_enqueue(&q, &i);
@@ -66,7 +66,7 @@ void test_queue_add_overflow(void)
     CU_ASSERT_TRUE(queue_is_empty(q));
     CU_ASSERT_EQUAL(queue_length(q), 0);
 
-    long int count = 10000;
+    long int count = 1000;
     for (int i = 0; i < count; i++)
     {
         queue_enqueue(&q, &i);

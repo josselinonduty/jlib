@@ -23,6 +23,15 @@ queue queue_create(generic_copy copy_fn, generic_free free_fn, generic_compare o
 
 void queue_destroy(queue *q)
 {
+    if (NULL == q)
+    {
+        errno = EINVAL;
+        return;
+    }
+
+    linked_list head = queue_get_head(*q);
+    linked_list_destroy(&head, q->free);
+    q->head = head;
 }
 
 bool queue_is_empty(queue q)
