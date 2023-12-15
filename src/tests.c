@@ -147,7 +147,8 @@ int main(void)
     if (
         NULL == CU_add_test(pSuite, "queue_create()", test_queue_create) ||
         NULL == CU_add_test(pSuite, "queue_add()", test_queue_add) ||
-        NULL == CU_add_test(pSuite, "queue_add_overflow()", test_queue_add_overflow))
+        NULL == CU_add_test(pSuite, "queue_add_overflow()", test_queue_add_overflow) ||
+        NULL == CU_add_test(pSuite, "queue_add_sorted()", test_queue_add_sorted))
     {
         CU_cleanup_registry();
         return CU_get_error();

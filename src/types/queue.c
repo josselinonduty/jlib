@@ -4,19 +4,27 @@
 
 #include "base/generic.h"
 #include "base/int.h"
+#include "base/flags.h"
 #include "base/linked_list.h"
 #include "types/queue.h"
 
-queue queue_create(generic_copy copy_fn, generic_free free_fn, generic_compare order_fn)
+queue queue_create(flag_sort flag, generic_copy copy_fn, generic_free free_fn, generic_compare order_fn)
 {
     queue q;
 
     q.head = linked_list_create();
     q.tail = q.head;
+    q.sort = flag;
 
     q.copy = copy_fn;
     q.free = free_fn;
     q.order = order_fn;
+
+    if (FLAG_SORTED == flag && NULL != order_fn)
+    {
+        errno = EINVAL;
+        return q;
+    }
 
     return q;
 }
@@ -37,6 +45,11 @@ void queue_destroy(queue *q)
 bool queue_is_empty(queue q)
 {
     return linked_list_is_empty(q.head);
+}
+
+bool queue_is_sorted(queue q)
+{
+    return FLAG_SORTED == q.sort;
 }
 
 long int queue_length(queue q)
@@ -72,9 +85,46 @@ void queue_enqueue(queue *q, any data)
         return;
     }
 
-    linked_list tail = queue_get_tail(*q);
-    linked_list_set_next(tail, node);
-    q->tail = node;
+    if (!queue_is_sorted(*q))
+    {
+        linked_list tail = queue_get_tail(*q);
+        linked_list_set_next(tail, node);
+        q->tail = node;
+        return;
+    }
+
+    linked_list ls = queue_get_head(*q);
+    bool sorted = false;
+    linked_list prev = NULL;
+
+    while (!linked_list_is_empty(ls))
+    {
+        if (!q->order(linked_list_get_data(ls), data))
+        {
+            if (NULL == prev)
+            {
+                linked_list_set_next(node, ls);
+                q->head = node;
+            }
+            else
+            {
+                linked_list_set_next(prev, node);
+                linked_list_set_next(node, ls);
+            }
+
+            sorted = true;
+            break;
+        }
+
+        prev = ls;
+        ls = linked_list_get_next(ls);
+    }
+
+    if (!sorted)
+    {
+        linked_list_set_next(prev, node);
+        q->tail = node;
+    }
 }
 
 any queue_dequeue(queue *q)
