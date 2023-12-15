@@ -6,16 +6,6 @@
 #include "base/linked_list.h"
 
 /**
- * @brief Queue flags
- * @typedef queue_flag
- */
-typedef enum queue_flag
-{
-    QUEUE_SORTED,
-    QUEUE_UNSORTED
-} queue_flag;
-
-/**
  * @private
  * @brief Queue
  * @typedef queue
