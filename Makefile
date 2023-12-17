@@ -58,8 +58,8 @@ $(SRCDIR)/%.relative.o: $(SRCDIR)/%.c
 $(SRCDIR)/%/%.relative.o: $(SRCDIR)/%/%.c
 	@$(CC) -fPIC -o $@ -c $< $(CFLAGS)
 
-tests: $(EXEC)
-	@./$(EXEC)
+run: $(EXEC)
+	@./$(EXEC) compress ./examples/source.txt
 
 clean: clean/objects clean/exec clean/docs
 

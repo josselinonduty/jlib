@@ -1,180 +1,155 @@
-#include <CUnit/CUnit.h>
-#include <CUnit/Basic.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include "tests/utilities.h"
-#include "tests/int.h"
-#include "tests/string.h"
-#include "tests/array.h"
-#include "tests/linked_list.h"
-#include "tests/doubly_linked_list.h"
-#include "tests/binary_tree.h"
-#include "tests/queue.h"
-#include "tests/stack.h"
+#include "base/flags.h"
+#include "types/queue.h"
+#include "types/huffman_tree.h"
+#include "types/statistic.h"
 
-int init_suite(void)
+void read_stats(char *filename, long int *stats)
 {
-    return 0;
+    FILE *fp = fopen(filename, "r");
+
+    if (fp == NULL)
+    {
+        printf("Error opening file\n");
+        exit(1);
+    }
+
+    int c;
+    while ((c = fgetc(fp)) != EOF)
+    {
+        stats[c]++;
+    }
+
+    fclose(fp);
 }
 
-int clean_suite(void)
+queue build_queue(long int *stats)
 {
-    return 0;
+    queue q = queue_create(FLAG_SORTED, huffman_tree_copy, huffman_tree_free, huffman_tree_compare);
+
+    for (int i = 0; i < 256; i++)
+    {
+        if (stats[i] == 0)
+        {
+            continue;
+        }
+
+        stat s = {i, stats[i]};
+        huffman_tree hf = huffman_tree_create(&s);
+        queue_enqueue(&q, &hf);
+    }
+
+    return q;
 }
 
-int main(void)
+const char DEFAULT_CHAR = ' ';
+
+huffman_tree *build_tree(queue q)
 {
-    CU_pSuite pSuite = NULL;
-
-    if (CUE_SUCCESS != CU_initialize_registry())
-        return CU_get_error();
-
-    pSuite = CU_add_suite("Utilities", init_suite, clean_suite);
-    if (NULL == pSuite)
+    while (queue_length(q) > 1)
     {
-        CU_cleanup_registry();
-        return CU_get_error();
+        huffman_tree *t1 = queue_dequeue(&q);
+        huffman_tree *t2 = queue_dequeue(&q);
+
+        stat *s1 = huffman_tree_get_data(*t1);
+        stat *s2 = huffman_tree_get_data(*t2);
+
+        stat *s = malloc(sizeof(stat));
+        s->byte = DEFAULT_CHAR;
+        s->count = s1->count + s2->count;
+
+        huffman_tree *t = malloc(sizeof(huffman_tree));
+        *t = huffman_tree_create(s);
+        huffman_tree_set_left(*t, *t1);
+        huffman_tree_set_right(*t, *t2);
+
+        queue_enqueue(&q, t);
+    }
+    return (huffman_tree *)queue_dequeue(&q);
+}
+
+void create_encoding_table_recursive(huffman_tree tree, char **table, char *encoding)
+{
+    if (binary_tree_is_leaf(tree))
+    {
+        table[huffman_tree_get_data(tree)->byte] = encoding;
+        return;
     }
 
-    if (
-        NULL == CU_add_test(pSuite, "exchange()", test_utils_exchange))
+    char *encodingLeft = malloc(sizeof(encoding) + 1);
+    strcpy(encodingLeft, encoding);
+    char *encodingRight = malloc(sizeof(encoding) + 1);
+    strcpy(encodingRight, encoding);
+
+    strcat(encodingLeft, "0");
+    strcat(encodingRight, "1");
+
+    create_encoding_table_recursive(huffman_tree_get_left(tree), table, encodingLeft);
+    create_encoding_table_recursive(huffman_tree_get_right(tree), table, encodingRight);
+}
+
+void create_encoding_table(huffman_tree tree, char **table)
+{
+    create_encoding_table_recursive(tree, table, "");
+}
+
+void compress(char *filename)
+{
+    long int stats[256] = {0};
+    read_stats(filename, stats);
+
+    for (int i = 0; i < 256; i++)
     {
-        CU_cleanup_registry();
-        return CU_get_error();
+        if (stats[i] > 0)
+        {
+            printf("%c: %ld\n", i, stats[i]);
+        }
     }
 
-    pSuite = CU_add_suite("Types", init_suite, clean_suite);
-    if (NULL == pSuite)
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
+    queue q = build_queue(stats);
 
-    if (NULL == CU_add_test(pSuite, "int_copy()", test_int_copy) ||
-        NULL == CU_add_test(pSuite, "int_equal()", test_int_equal) ||
-        NULL == CU_add_test(pSuite, "int_leq()", test_int_leq) ||
-        NULL == CU_add_test(pSuite, "int_geq()", test_int_geq) ||
-        NULL == CU_add_test(pSuite, "string_copy()", test_string_copy) ||
-        NULL == CU_add_test(pSuite, "string_equal()", test_string_equal))
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    pSuite = CU_add_suite("Array", init_suite, clean_suite);
-    if (NULL == pSuite)
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    if (
-        NULL == CU_add_test(pSuite, "array_create()", test_array_create) ||
-        NULL == CU_add_test(pSuite, "array_destroy()", test_array_destroy) ||
-        NULL == CU_add_test(pSuite, "array_free()", test_array_free) ||
-        NULL == CU_add_test(pSuite, "array_add()", test_array_add) ||
-        NULL == CU_add_test(pSuite, "array_add_multiple()", test_array_add_multiple) ||
-        NULL == CU_add_test(pSuite, "array_add_overflow()", test_array_add_overflow) ||
-        NULL == CU_add_test(pSuite, "array_insert()", test_array_insert) ||
-        NULL == CU_add_test(pSuite, "array_resize()", test_array_resize))
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    pSuite = CU_add_suite("Linked List", init_suite, clean_suite);
-    if (NULL == pSuite)
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    if (
-        NULL == CU_add_test(pSuite, "linked_list_empty()", test_linked_list_empty) ||
-        NULL == CU_add_test(pSuite, "linked_list_add_int()", test_linked_list_add_int) ||
-        NULL == CU_add_test(pSuite, "test_linked_list_add_sorted_int()", test_linked_list_add_sorted_int) ||
-        NULL == CU_add_test(pSuite, "linked_list_overflow_int()", test_linked_list_overflow_int) ||
-        NULL == CU_add_test(pSuite, "linked_list_add_string()", test_linked_list_add_string) ||
-        NULL == CU_add_test(pSuite, "linked_list_overflow_string()", test_linked_list_overflow_string) ||
-        NULL == CU_add_test(pSuite, "linked_list_remove()", test_linked_list_remove_string))
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    pSuite = CU_add_suite("Doubly Linked List", init_suite, clean_suite);
-    if (NULL == pSuite)
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    if (
-        NULL == CU_add_test(pSuite, "doubly_linked_list_empty()", test_doubly_linked_list_empty) ||
-        NULL == CU_add_test(pSuite, "doubly_linked_list_add_int()", test_doubly_linked_list_add_int) ||
-        NULL == CU_add_test(pSuite, "doubly_linked_list_add_sorted_int()", test_doubly_linked_list_add_sorted_int) ||
-        NULL == CU_add_test(pSuite, "doubly_linked_list_overflow_int()", test_doubly_linked_list_overflow_int) ||
-        NULL == CU_add_test(pSuite, "doubly_linked_list_add_string()", test_doubly_linked_list_add_string) ||
-        NULL == CU_add_test(pSuite, "doubly_linked_list_overflow_string()", test_doubly_linked_list_overflow_string) ||
-        NULL == CU_add_test(pSuite, "doubly_linked_list_remove()", test_doubly_linked_list_remove_string))
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    pSuite = CU_add_suite("Binary Tree", init_suite, clean_suite);
-    if (NULL == pSuite)
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    if (
-        NULL == CU_add_test(pSuite, "binary_tree_create()", test_binary_tree_create) ||
-        NULL == CU_add_test(pSuite, "binary_tree_add()", test_binary_tree_add) ||
-        NULL == CU_add_test(pSuite, "binary_tree_add_overflow()", test_binary_tree_add_overflow) ||
-        NULL == CU_add_test(pSuite, "binary_tree_remove()", test_binary_tree_remove))
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    pSuite = CU_add_suite("Queue", init_suite, clean_suite);
-    if (NULL == pSuite)
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    if (
-        NULL == CU_add_test(pSuite, "queue_create()", test_queue_create) ||
-        NULL == CU_add_test(pSuite, "queue_add()", test_queue_add) ||
-        NULL == CU_add_test(pSuite, "queue_add_overflow()", test_queue_add_overflow) ||
-        NULL == CU_add_test(pSuite, "queue_add_sorted()", test_queue_add_sorted))
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    pSuite = CU_add_suite("Stack", init_suite, clean_suite);
-    if (NULL == pSuite)
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    if (
-        NULL == CU_add_test(pSuite, "stack_create()", test_stack_create) ||
-        NULL == CU_add_test(pSuite, "stack_add()", test_stack_add) ||
-        NULL == CU_add_test(pSuite, "stack_add_overflow()", test_stack_add_overflow))
-    {
-        CU_cleanup_registry();
-        return CU_get_error();
-    }
-
-    CU_basic_set_mode(CU_BRM_VERBOSE);
-    CU_basic_run_tests();
-    CU_basic_show_failures(CU_get_failure_list());
+    huffman_tree *res = build_tree(q);
+    huffman_tree_print(res);
     printf("\n");
 
-    return CU_get_number_of_tests_failed() > 0;
+    char *table[256];
+    create_encoding_table(*res, table);
+
+    for (int i = 0; i < 256; i++)
+    {
+        if (stats[i] == 0)
+        {
+            continue;
+        }
+
+        printf("%c: %s\n", i, table[i]);
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    if (argc < 3)
+    {
+        printf("Usage: %s compress <filename>\n", argv[0]);
+        exit(1);
+    }
+
+    if (strcmp(argv[1], "compress") == 0)
+    {
+        compress(argv[2]);
+    }
+    else if (strcmp(argv[1], "decompress") == 0)
+    {
+        printf("decompress\n");
+    }
+    else
+    {
+        printf("Usage: %s compress|decompress <filename>\n", argv[0]);
+        exit(1);
+    }
+
+    return 0;
 }
