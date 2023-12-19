@@ -6,6 +6,7 @@
 #include "types/queue.h"
 #include "types/huffman_tree.h"
 #include "types/statistic.h"
+#include "types/binary_code.h"
 
 void read_stats(char *filename, long int *stats)
 {
@@ -24,6 +25,47 @@ void read_stats(char *filename, long int *stats)
     }
 
     fclose(fp);
+}
+
+void write_stats(char *filename, binary_code *table)
+{
+    FILE *fp = fopen(filename, "r");
+    // The dest file is same name as src file, but replace the extension with .huff
+    char *dest_filename = malloc(strlen(filename) + 1);
+    strcpy(dest_filename, filename);
+    char *dot = strrchr(dest_filename, '.');
+    if (dot)
+    {
+        *dot = '\0';
+    }
+    strcat(dest_filename, ".huff");
+
+    FILE *dest_fp = fopen(dest_filename, "w");
+
+    if (fp == NULL)
+    {
+        printf("Error opening file\n");
+        exit(1);
+    }
+
+    long int length = 0;
+    int c;
+    while ((c = fgetc(fp)) != EOF)
+    {
+        for (int i = 0; i < binary_code_length(table[c]); i++)
+        {
+            fputc(binary_code_get(table[c], i), dest_fp);
+        }
+        length++;
+    }
+
+    fseek(dest_fp, 0, SEEK_SET);
+    fputc('H', dest_fp);
+    fputc('F', dest_fp);
+    fputc(length, dest_fp);
+
+    fclose(fp);
+    fclose(dest_fp);
 }
 
 queue build_queue(long int *stats)
@@ -71,7 +113,7 @@ huffman_tree *build_tree(queue q)
     return (huffman_tree *)queue_dequeue(&q);
 }
 
-void create_encoding_table_recursive(huffman_tree tree, char **table, char *encoding)
+void create_encoding_table_recursive(huffman_tree tree, binary_code *table, binary_code encoding)
 {
     if (binary_tree_is_leaf(tree))
     {
@@ -79,21 +121,27 @@ void create_encoding_table_recursive(huffman_tree tree, char **table, char *enco
         return;
     }
 
-    char *encodingLeft = malloc(sizeof(encoding) + 1);
-    strcpy(encodingLeft, encoding);
-    char *encodingRight = malloc(sizeof(encoding) + 1);
-    strcpy(encodingRight, encoding);
+    binary_code encodingLeft = binary_code_copy(encoding);
+    binary_code encodingRight = binary_code_copy(encoding);
+    binary_code_destroy(encoding);
 
-    strcat(encodingLeft, "0");
-    strcat(encodingRight, "1");
+    if (huffman_tree_get_left(tree) != NULL)
+    {
+        binary_code_set(encodingLeft, binary_code_length(encodingLeft), 0);
+        create_encoding_table_recursive(huffman_tree_get_left(tree), table, encodingLeft);
+    }
 
-    create_encoding_table_recursive(huffman_tree_get_left(tree), table, encodingLeft);
-    create_encoding_table_recursive(huffman_tree_get_right(tree), table, encodingRight);
+    if (huffman_tree_get_right(tree) != NULL)
+    {
+        binary_code_set(encodingRight, binary_code_length(encodingRight), 1);
+        create_encoding_table_recursive(huffman_tree_get_right(tree), table, encodingRight);
+    }
 }
 
-void create_encoding_table(huffman_tree tree, char **table)
+void create_encoding_table(huffman_tree tree, binary_code *table)
 {
-    create_encoding_table_recursive(tree, table, "");
+    binary_code encoding = binary_code_create();
+    create_encoding_table_recursive(tree, table, encoding);
 }
 
 void compress(char *filename)
@@ -115,18 +163,10 @@ void compress(char *filename)
     huffman_tree_print(res);
     printf("\n");
 
-    char *table[256];
+    binary_code table[256];
     create_encoding_table(*res, table);
 
-    for (int i = 0; i < 256; i++)
-    {
-        if (stats[i] == 0)
-        {
-            continue;
-        }
-
-        printf("%c: %s\n", i, table[i]);
-    }
+    write_stats(filename, table);
 }
 
 int main(int argc, char *argv[])

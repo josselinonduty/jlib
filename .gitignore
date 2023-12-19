@@ -10,3 +10,4 @@ tmp.*
 *.o
 docs
 *.cache
+*.huff
