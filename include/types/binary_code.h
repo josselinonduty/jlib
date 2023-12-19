@@ -17,5 +17,6 @@ int binary_code_length(binary_code code);
 void binary_code_print(binary_code code);
 binary_code binary_code_copy(binary_code code);
 void binary_code_free(binary_code code);
+bool binary_code_compare(binary_code a, binary_code b);
 
 #endif // __BYTE_H__

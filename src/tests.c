@@ -8,39 +8,9 @@
 #include "types/statistic.h"
 #include "types/binary_code.h"
 
-void read_stats(char *filename, long int *stats)
+long int read_stats(char *filename, long int *stats)
 {
     FILE *fp = fopen(filename, "r");
-
-    if (fp == NULL)
-    {
-        printf("Error opening file\n");
-        exit(1);
-    }
-
-    int c;
-    while ((c = fgetc(fp)) != EOF)
-    {
-        stats[c]++;
-    }
-
-    fclose(fp);
-}
-
-void write_stats(char *filename, binary_code *table)
-{
-    FILE *fp = fopen(filename, "r");
-    // The dest file is same name as src file, but replace the extension with .huff
-    char *dest_filename = malloc(strlen(filename) + 1);
-    strcpy(dest_filename, filename);
-    char *dot = strrchr(dest_filename, '.');
-    if (dot)
-    {
-        *dot = '\0';
-    }
-    strcat(dest_filename, ".huff");
-
-    FILE *dest_fp = fopen(dest_filename, "w");
 
     if (fp == NULL)
     {
@@ -52,24 +22,78 @@ void write_stats(char *filename, binary_code *table)
     int c;
     while ((c = fgetc(fp)) != EOF)
     {
-        for (int i = 0; i < binary_code_length(table[c]); i++)
-        {
-            fputc(binary_code_get(table[c], i), dest_fp);
-        }
-        binary_code_print(table[c]);
+        stats[c]++;
         length++;
     }
-    printf("\n");
 
-    fseek(dest_fp, 0, SEEK_SET);
+    fclose(fp);
+
+    return length;
+}
+
+void write_stats(char *filename, long int *stats, binary_code *table, long int length)
+{
+    FILE *fp = fopen(filename, "r");
+
+    char *dest_filename = malloc(strlen(filename) + 5);
+    dest_filename = strcat(filename, ".huff");
+
+    FILE *dest_fp = fopen(dest_filename, "w");
+
+    if (fp == NULL)
+    {
+        printf("Error opening file\n");
+        exit(1);
+    }
+
     fputc('H', dest_fp);
     printf("H");
     fputc('F', dest_fp);
     printf("F");
     printf("\n");
-    fputc(length, dest_fp);
-    printf("%ld", length);
+
+    printf("%lu\n", length);
+    fwrite(&length, sizeof(unsigned long int), 1, dest_fp);
+
+    for (int i = 0; i < 256; i++)
+    {
+        fwrite(&stats[i], sizeof(unsigned long int), 1, dest_fp);
+    }
+
+    int buffer = 0;
+    int buffer_length = 0;
+
+    long int compressed_length = 0;
+    int c;
+    while ((c = fgetc(fp)) != EOF)
+    {
+        binary_code_print(table[c]);
+        for (int i = 0; i < binary_code_length(table[c]); i++)
+        {
+            buffer <<= 1;
+            buffer |= binary_code_get(table[c], i);
+            buffer_length++;
+
+            if (buffer_length == 8)
+            {
+                fputc(buffer, dest_fp);
+                buffer = 0;
+                buffer_length = 0;
+            }
+
+            compressed_length++;
+        }
+    }
+    if (buffer_length > 0)
+    {
+        buffer <<= (8 - buffer_length);
+        fputc(buffer, dest_fp);
+    }
+
     printf("\n");
+
+    double ratio = (double)compressed_length / ((double)length * 8) * 100;
+    printf("Final size: %.1f%%\n", ratio);
 
     fclose(fp);
     fclose(dest_fp);
@@ -154,7 +178,7 @@ void create_encoding_table(huffman_tree tree, binary_code *table)
 void compress(char *filename)
 {
     long int stats[256] = {0};
-    read_stats(filename, stats);
+    long int length = read_stats(filename, stats);
 
     for (int i = 0; i < 256; i++)
     {
@@ -173,7 +197,115 @@ void compress(char *filename)
     binary_code table[256];
     create_encoding_table(*res, table);
 
-    write_stats(filename, table);
+    write_stats(filename, stats, table, length);
+}
+
+void decompress(char *filename)
+{
+    FILE *fp = fopen(filename, "r");
+
+    char *dest_filename = malloc(strlen(filename) - 3);
+    strncpy(dest_filename, filename, strlen(filename) - 3);
+
+    FILE *dest_fp = fopen(dest_filename, "w");
+
+    if (fp == NULL)
+    {
+        printf("Error opening file\n");
+        exit(1);
+    }
+
+    char c;
+    c = fgetc(fp);
+    if (c != 'H')
+    {
+        printf("Invalid file format\n");
+        exit(1);
+    }
+    printf("%c", c);
+    c = fgetc(fp);
+    if (c != 'F')
+    {
+        printf("Invalid file format\n");
+        exit(1);
+    }
+    printf("%c", c);
+    printf("\n");
+
+    unsigned long int length;
+    fread(&length, sizeof(unsigned long int), 1, fp);
+
+    long int stats[256] = {0};
+    for (int i = 0; i < 256; i++)
+    {
+        fread(&stats[i], sizeof(unsigned long int), 1, fp);
+
+        if (stats[i] > 0)
+        {
+            printf("%c: %ld\n", i, stats[i]);
+        }
+    }
+
+    queue q = build_queue(stats);
+
+    huffman_tree *res = build_tree(q);
+    huffman_tree_print(res);
+    printf("\n");
+
+    binary_code table[256];
+    create_encoding_table(*res, table);
+    for (int i = 0; i < 256; i++)
+    {
+        if (stats[i] > 0)
+        {
+            printf("%c: ", i);
+            binary_code_print(table[i]);
+            printf("\n");
+        }
+    }
+
+    // decompress_stats(fp, dest_fp, table, length);
+
+    binary_code buffer = binary_code_create();
+
+    long int decompressed_length = 0;
+    while (decompressed_length < length)
+    {
+        c = fgetc(fp);
+        for (int i = 0; i < 8; i++)
+        {
+            binary_code_set(buffer, binary_code_length(buffer), (c >> (7 - i)) & 0x1);
+            for (int j = 0; j < 256; j++)
+            {
+                if (stats[j] == 0)
+                {
+                    continue;
+                }
+
+                if (binary_code_compare(buffer, table[j]))
+                {
+                    fputc(j, dest_fp);
+                    printf("%c", j);
+                    decompressed_length++;
+                    binary_code_destroy(buffer);
+                    buffer = binary_code_create();
+                    break;
+                }
+            }
+
+            if (decompressed_length == length)
+            {
+                break;
+            }
+        }
+    }
+    printf("\n");
+
+    double ratio = (double)decompressed_length / ((double)length * 8) * 100;
+    printf("Final size: %.1f%%\n", ratio);
+
+    fclose(fp);
+    fclose(dest_fp);
 }
 
 int main(int argc, char *argv[])
@@ -190,7 +322,7 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(argv[1], "decompress") == 0)
     {
-        printf("decompress\n");
+        decompress(argv[2]);
     }
     else
     {

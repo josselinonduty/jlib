@@ -65,3 +65,21 @@ void binary_code_free(binary_code code)
 {
     binary_code_destroy(code);
 }
+
+bool binary_code_compare(binary_code a, binary_code b)
+{
+    if (binary_code_length(a) != binary_code_length(b))
+    {
+        return false;
+    }
+
+    for (int i = 0; i < binary_code_length(a); i++)
+    {
+        if (binary_code_get(a, i) != binary_code_get(b, i))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
