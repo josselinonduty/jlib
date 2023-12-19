@@ -56,13 +56,20 @@ void write_stats(char *filename, binary_code *table)
         {
             fputc(binary_code_get(table[c], i), dest_fp);
         }
+        binary_code_print(table[c]);
         length++;
     }
+    printf("\n");
 
     fseek(dest_fp, 0, SEEK_SET);
     fputc('H', dest_fp);
+    printf("H");
     fputc('F', dest_fp);
+    printf("F");
+    printf("\n");
     fputc(length, dest_fp);
+    printf("%ld", length);
+    printf("\n");
 
     fclose(fp);
     fclose(dest_fp);
