@@ -55,6 +55,15 @@ void write_stats(char *filename, long int *stats, binary_code *table, long int l
     printf("%lu\n", length);
     fwrite(&length, sizeof(unsigned long int), 1, dest_fp);
 
+    if (NULL == stats || NULL == table)
+    {
+        printf("File is empty.\n");
+        fclose(fp);
+        fclose(dest_fp);
+
+        return;
+    }
+
     for (int i = 0; i < 256; i++)
     {
         fwrite(&stats[i], sizeof(unsigned long int), 1, dest_fp);
@@ -146,8 +155,13 @@ huffman_tree *build_tree(queue q)
 
 void create_encoding_table_recursive(huffman_tree tree, binary_code *table, binary_code encoding)
 {
-    if (binary_tree_is_leaf(tree))
+    if (NULL == tree || binary_tree_is_leaf(tree))
     {
+        if (binary_code_length(encoding) < 1)
+        {
+            binary_code_set(encoding, 0, 1);
+        }
+
         table[huffman_tree_get_data(tree)->byte] = encoding;
         return;
     }
@@ -190,12 +204,28 @@ void compress(char *filename)
 
     queue q = build_queue(stats);
 
+    if (queue_is_empty(q))
+    {
+        write_stats(filename, NULL, NULL, 0);
+        return;
+    }
+
     huffman_tree *res = build_tree(q);
     huffman_tree_print(res);
     printf("\n");
 
     binary_code table[256];
     create_encoding_table(*res, table);
+
+    for (int i = 0; i < 256; i++)
+    {
+        if (stats[i] > 0)
+        {
+            printf("%c: ", i);
+            binary_code_print(table[i]);
+            printf("\n");
+        }
+    }
 
     write_stats(filename, stats, table, length);
 }
@@ -204,8 +234,8 @@ void decompress(char *filename)
 {
     FILE *fp = fopen(filename, "r");
 
-    char *dest_filename = malloc(strlen(filename) - 3);
-    strncpy(dest_filename, filename, strlen(filename) - 3);
+    char *dest_filename = malloc(strlen(filename) - 5);
+    strncpy(dest_filename, filename, strlen(filename) - 5);
 
     FILE *dest_fp = fopen(dest_filename, "w");
 
@@ -235,6 +265,15 @@ void decompress(char *filename)
     unsigned long int length;
     fread(&length, sizeof(unsigned long int), 1, fp);
 
+    if (length == 0)
+    {
+        printf("File is empty.\n");
+        fclose(fp);
+        fclose(dest_fp);
+
+        return;
+    }
+
     long int stats[256] = {0};
     for (int i = 0; i < 256; i++)
     {
@@ -263,8 +302,6 @@ void decompress(char *filename)
             printf("\n");
         }
     }
-
-    // decompress_stats(fp, dest_fp, table, length);
 
     binary_code buffer = binary_code_create();
 
