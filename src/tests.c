@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "base/flags.h"
 #include "types/queue.h"
@@ -76,7 +77,6 @@ void write_stats(char *filename, long int *stats, binary_code *table, long int l
     int c;
     while ((c = fgetc(fp)) != EOF)
     {
-        binary_code_print(table[c]);
         for (int i = 0; i < binary_code_length(table[c]); i++)
         {
             buffer <<= 1;
@@ -191,6 +191,8 @@ void create_encoding_table(huffman_tree tree, binary_code *table)
 
 void compress(char *filename)
 {
+    clock_t start = clock();
+
     long int stats[256] = {0};
     long int length = read_stats(filename, stats);
 
@@ -211,27 +213,21 @@ void compress(char *filename)
     }
 
     huffman_tree *res = build_tree(q);
-    huffman_tree_print(res);
-    printf("\n");
 
     binary_code table[256];
     create_encoding_table(*res, table);
 
-    for (int i = 0; i < 256; i++)
-    {
-        if (stats[i] > 0)
-        {
-            printf("%c: ", i);
-            binary_code_print(table[i]);
-            printf("\n");
-        }
-    }
-
     write_stats(filename, stats, table, length);
+
+    clock_t end = clock();
+    double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Elapsed: %.3fs\n", time_spent);
 }
 
 void decompress(char *filename)
 {
+    clock_t start = clock();
+
     FILE *fp = fopen(filename, "r");
 
     char *dest_filename = malloc(strlen(filename) - 5);
@@ -288,20 +284,9 @@ void decompress(char *filename)
     queue q = build_queue(stats);
 
     huffman_tree *res = build_tree(q);
-    huffman_tree_print(res);
-    printf("\n");
 
     binary_code table[256];
     create_encoding_table(*res, table);
-    for (int i = 0; i < 256; i++)
-    {
-        if (stats[i] > 0)
-        {
-            printf("%c: ", i);
-            binary_code_print(table[i]);
-            printf("\n");
-        }
-    }
 
     binary_code buffer = binary_code_create();
 
@@ -343,6 +328,10 @@ void decompress(char *filename)
 
     fclose(fp);
     fclose(dest_fp);
+
+    clock_t end = clock();
+    double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("Elapsed: %.3f\ns", time_spent);
 }
 
 int main(int argc, char *argv[])
