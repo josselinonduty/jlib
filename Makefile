@@ -36,7 +36,7 @@ docs: $(DOCSDIR)
 	$(DOCS) $(DOCSCONFIG)
 
 debug: $(EXEC)
-	@$(DEBUG) -s $(DFLAGS) $(EXEC) 2>&1 | tee $(BINDIR)/.valgrind.log /dev/tty | \
+	@$(DEBUG) -s $(DFLAGS) $(EXEC) 2>&1 | tee $(BINDIR)/.valgrind.log | \
 		grep -q "All heap blocks were freed -- no leaks are possible"; \
 		if [ $$? -ne 0 ]; then \
 			echo "Memory leaks detected!"; \
