@@ -16,3 +16,5 @@ jobs:
         run: make bin
       - name: Test
         run: make tests
+      - name: Leaks
+        run: make debug
