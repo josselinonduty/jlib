@@ -95,7 +95,7 @@ void linked_list_add_sorted(linked_list *ls, any data, generic_copy copy, generi
         return;
     }
 
-    if (compare(linked_list_get_data(*ls), data))
+    if (!compare(linked_list_get_data(*ls), data))
     {
         linked_list_add(ls, data, copy);
         return;
