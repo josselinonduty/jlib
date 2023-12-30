@@ -69,3 +69,23 @@ void string_print(any value)
 {
     printf("%s", *(string *)value);
 }
+
+hash string_hash(any value)
+{
+    string str = *(string *)value;
+    if (NULL == str)
+    {
+        errno = EINVAL;
+        return 0;
+    }
+
+    unsigned long hash = 5381;
+    int c;
+
+    while ((c = *str++))
+    {
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    }
+
+    return hash;
+}
