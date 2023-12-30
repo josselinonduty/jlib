@@ -36,7 +36,12 @@ docs: $(DOCSDIR)
 	$(DOCS) $(DOCSCONFIG)
 
 debug: $(EXEC)
-	$(DEBUG) -s $(EXEC) $(DFLAGS)
+	@$(DEBUG) -s $(DFLAGS) $(EXEC) 2>&1 | tee $(BINDIR)/.valgrind.log /dev/tty | \
+		grep -q "All heap blocks were freed -- no leaks are possible"; \
+		if [ $$? -ne 0 ]; then \
+			echo "Memory leaks detected!"; \
+			exit 1; \
+		fi;
 
 build: build/static build/dynamic
 
@@ -61,7 +66,7 @@ $(SRCDIR)/%/%.relative.o: $(SRCDIR)/%/%.c
 tests: $(EXEC)
 	@./$(EXEC)
 
-clean: clean/objects clean/exec clean/docs
+clean: clean/objects clean/exec clean/docs clean/debug
 
 clean/objects:
 	@rm -f ./$(SRCDIR)/*.o
@@ -74,7 +79,7 @@ clean/docs:
 	@rm -rf ./$(DOCSDIR)
 
 install/debian:
-	apt-get install libcunit1 libcunit1-doc libcunit1-dev
+	apt-get install libcunit1 libcunit1-doc libcunit1-dev valgrind -y
 
 changelog:
 	./changelog.sh > CHANGELOG.md
