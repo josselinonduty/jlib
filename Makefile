@@ -78,6 +78,9 @@ clean/exec:
 clean/docs:
 	@rm -rf ./$(DOCSDIR)
 
+clean/debug:
+	@rm -f ./$(BINDIR)/.valgrind.log
+
 install/debian:
 	apt-get install libcunit1 libcunit1-doc libcunit1-dev valgrind -y
 
