@@ -11,6 +11,8 @@ void test_int_copy(void)
 
     CU_ASSERT_EQUAL(*copy, value);
     CU_ASSERT_NOT_EQUAL(copy, &value);
+
+    int_free(copy);
 }
 
 void test_int_equal(void)

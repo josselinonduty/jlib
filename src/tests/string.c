@@ -9,6 +9,8 @@ void test_string_copy(void)
 
     CU_ASSERT_STRING_EQUAL(*copy, value);
     CU_ASSERT_PTR_NOT_EQUAL(copy, &value);
+
+    string_free(copy);
 }
 
 void test_string_equal(void)

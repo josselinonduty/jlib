@@ -141,6 +141,7 @@ void test_queue_add_sorted(void)
 
         int_free(item);
     }
+    int_free(prev);
 
     CU_ASSERT_TRUE(queueValid);
     CU_ASSERT_TRUE(queue_is_empty(q));
@@ -184,6 +185,7 @@ void test_queue_add_sorted(void)
 
         int_free(item);
     }
+    int_free(prev);
 
     CU_ASSERT_TRUE(queueValid);
     CU_ASSERT_TRUE(queue_is_empty(q));

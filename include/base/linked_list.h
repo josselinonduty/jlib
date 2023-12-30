@@ -32,8 +32,7 @@ struct linked_list_node
  * @brief Creates a new linked list
  * @return linked_list
  */
-linked_list
-linked_list_create();
+linked_list linked_list_create(void);
 
 /**
  * @brief Checks if a linked list is empty
