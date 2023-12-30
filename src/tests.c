@@ -8,6 +8,7 @@
 #include "tests/array.h"
 #include "tests/linked_list.h"
 #include "tests/doubly_linked_list.h"
+#include "tests/kv_linked_list.h"
 #include "tests/binary_tree.h"
 #include "tests/queue.h"
 #include "tests/stack.h"
@@ -118,6 +119,24 @@ int main(void)
         NULL == CU_add_test(pSuite, "doubly_linked_list_add_string()", test_doubly_linked_list_add_string) ||
         NULL == CU_add_test(pSuite, "doubly_linked_list_overflow_string()", test_doubly_linked_list_overflow_string) ||
         NULL == CU_add_test(pSuite, "doubly_linked_list_remove()", test_doubly_linked_list_remove_string))
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    pSuite = CU_add_suite("KV Linked List", init_suite, clean_suite);
+    if (NULL == pSuite)
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if (
+        NULL == CU_add_test(pSuite, "kv_linked_list_empty()", test_kv_linked_list_empty) ||
+        NULL == CU_add_test(pSuite, "kv_linked_list_add()", test_kv_linked_list_add) ||
+        NULL == CU_add_test(pSuite, "kv_linked_list_add_sorted()", test_kv_linked_list_add_sorted) ||
+        NULL == CU_add_test(pSuite, "kv_linked_list_overflow()", test_kv_linked_list_overflow) ||
+        NULL == CU_add_test(pSuite, "kv_linked_list_remove()", test_kv_linked_list_remove))
     {
         CU_cleanup_registry();
         return CU_get_error();
