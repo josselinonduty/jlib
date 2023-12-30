@@ -11,6 +11,7 @@
 #include "tests/binary_tree.h"
 #include "tests/queue.h"
 #include "tests/stack.h"
+#include "tests/hash_table.h"
 
 int init_suite(void)
 {
@@ -167,6 +168,25 @@ int main(void)
         NULL == CU_add_test(pSuite, "stack_create()", test_stack_create) ||
         NULL == CU_add_test(pSuite, "stack_add()", test_stack_add) ||
         NULL == CU_add_test(pSuite, "stack_add_overflow()", test_stack_add_overflow))
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    pSuite = CU_add_suite("Hash Table", init_suite, clean_suite);
+    if (NULL == pSuite)
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if (
+        NULL == CU_add_test(pSuite, "hash_table_bucket()", test_hash_table_bucket) ||
+        NULL == CU_add_test(pSuite, "hash_table_create()", test_hash_table_create) ||
+        NULL == CU_add_test(pSuite, "hash_table_add()", test_hash_table_add) ||
+        NULL == CU_add_test(pSuite, "hash_table_add_overflow()", test_hash_table_add_overflow) ||
+        NULL == CU_add_test(pSuite, "hash_table_remove()", test_hash_table_remove) ||
+        NULL == CU_add_test(pSuite, "hash_table_destroy()", test_hash_table_destroy))
     {
         CU_cleanup_registry();
         return CU_get_error();
