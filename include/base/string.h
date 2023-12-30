@@ -9,5 +9,6 @@ any string_copy(any);
 void string_free(any);
 bool string_equal(any, any);
 void string_print(any);
+hash string_hash(any);
 
 #endif // __STRING_H__

@@ -137,5 +137,10 @@ void linked_list_print(linked_list ls, generic_print print_fn)
     {
         print_fn(linked_list_get_data(ls));
         ls = linked_list_get_next(ls);
+
+        if (!linked_list_is_empty(ls))
+        {
+            printf("->");
+        }
     }
 }

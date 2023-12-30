@@ -10,5 +10,6 @@ bool int_equal(any, any);
 bool int_leq(any, any);
 bool int_geq(any, any);
 void int_print(any);
+hash int_hash(any);
 
 #endif // __INT_H__
