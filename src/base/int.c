@@ -79,3 +79,19 @@ void int_print(any value)
 {
     printf("%d", *(int *)value);
 }
+
+/**
+ * @brief Hashes an integer based on the generic hash function.
+ * @param value The value to hash.
+ * @return hash The hash of the value.
+ */
+hash int_hash(any value)
+{
+    int v = *(int *)value;
+    v = (v + 0x7ed55d16) + (v << 12);
+    v = (v ^ 0xc761c23c) ^ (v >> 19);
+    v = (v + 0x165667b1) + (v << 5);
+    v = (v + 0xd3a2646c) ^ (v << 9);
+
+    return v ^ (v >> 16);
+}

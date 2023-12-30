@@ -74,7 +74,8 @@ void test_binary_tree_add_overflow(void)
             left = binary_tree_create(&j, int_copy);
             right = binary_tree_create(&j, int_copy);
 
-            binary_tree_add_root(left, right, &j, int_copy);
+            binary_tree_destroy(&tree, int_free);
+            tree = binary_tree_add_root(left, right, &j, int_copy);
         }
 
         binary_tree_destroy(&tree, int_free);
