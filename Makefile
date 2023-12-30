@@ -36,7 +36,7 @@ docs: $(DOCSDIR)
 	$(DOCS) $(DOCSCONFIG)
 
 debug: $(EXEC)
-	$(DEBUG) $(EXEC) $(DFLAGS)
+	$(DEBUG) -s $(EXEC) $(DFLAGS)
 
 build: build/static build/dynamic
 
