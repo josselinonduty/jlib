@@ -24,7 +24,7 @@ typedef KV_linked_list_node *KV_linked_list;
  */
 struct KV_linked_list_node
 {
-    KV data; /** @brief Data */
+    KV data;             /** @brief Data */
     KV_linked_list next; /** @brief Next node */
 };
 
