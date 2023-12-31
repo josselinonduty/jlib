@@ -56,6 +56,7 @@ int main(void)
         NULL == CU_add_test(pSuite, "int_equal()", test_int_equal) ||
         NULL == CU_add_test(pSuite, "int_leq()", test_int_leq) ||
         NULL == CU_add_test(pSuite, "int_geq()", test_int_geq) ||
+        NULL == CU_add_test(pSuite, "string_create()", test_string_create) ||
         NULL == CU_add_test(pSuite, "string_copy()", test_string_copy) ||
         NULL == CU_add_test(pSuite, "string_equal()", test_string_equal))
     {
