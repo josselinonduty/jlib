@@ -6,11 +6,6 @@
 #include "base/generic.h"
 #include "base/int.h"
 
-/**
- * @brief Copies an integer based on the generic copy function.
- * @param value The value to copy.
- * @return any The copied value.
- */
 any int_copy(any value)
 {
     any copy = malloc(sizeof(long int));
@@ -25,10 +20,6 @@ any int_copy(any value)
     return copy;
 }
 
-/**
- * @brief Frees an integer based on the generic free function.
- * @param value The value to free.
- */
 void int_free(any value)
 {
     int *v = (int *)value;
@@ -36,55 +27,26 @@ void int_free(any value)
     v = NULL;
 }
 
-/**
- * @brief Compares two integers based on the generic compare function.
- * @param a The first integer.
- * @param b The second integer.
- * @return bool True if the integers are equal, false otherwise.
- */
 bool int_equal(any a, any b)
 {
     return *(int *)a == *(int *)b;
 }
 
-/**
- * @brief Compares two integers based on the generic compare function.
- * @param a The first integer.
- * @param b The second integer.
- * @return bool True if the first integer is greater than the second, false otherwise.
- */
 bool int_leq(any a, any b)
 {
     return *(int *)a <= *(int *)b;
 }
 
-/**
- * @brief Compares two integers based on the generic compare function.
- * @param a The first integer.
- * @param b The second integer.
- * @return bool True if the first integer is less than the second, false otherwise.
- */
 bool int_geq(any a, any b)
 {
     return *(int *)a >= *(int *)b;
 }
 
-/**
- * @brief Compares two integers based on the generic compare function.
- * @param a The first integer.
- * @param b The second integer.
- * @return bool True if the first integer is less than the second, false otherwise.
- */
 void int_print(any value)
 {
     printf("%d", *(int *)value);
 }
 
-/**
- * @brief Hashes an integer based on the generic hash function.
- * @param value The value to hash.
- * @return hash The hash of the value.
- */
 hash int_hash(any value)
 {
     int v = *(int *)value;

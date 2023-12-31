@@ -27,8 +27,8 @@ typedef struct KV KV;
  */
 struct KV
 {
-    any key;   /** \brief Key */
-    any value; /** \brief Value */
+    any key;
+    any value;
 };
 
 /**

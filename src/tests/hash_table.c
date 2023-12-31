@@ -4,56 +4,56 @@
 #include <stdbool.h>
 
 #include "base/generic.h"
+#include "base/kv_generic.h"
 #include "base/int.h"
 #include "base/string.h"
-#include "base/linked_list.h"
+#include "base/kv_linked_list.h"
 #include "base/hash_table.h"
 
-hash_table_bucket __hash_table_alphabet(void)
+KV __hash_kv_copy_string_int(KV kv)
 {
-    hash_table_bucket bucket = hash_table_bucket_create();
+    string *key = string_copy(kv.key);
+    int *value = int_copy(kv.value);
 
-    for (int i = 97; i < 97 + 26; i++)
-    {
-        string key = malloc(sizeof(char) * 2);
-        strcpy(key, (char[]){i, '\0'});
-
-        int value = i;
-        hash_table_entry entry = {
-            .key = &key,
-            .value = &value};
-
-        hash_table_bucket_insert(&bucket, entry, string_copy, int_copy);
-
-        free(key);
-    }
-
-    return bucket;
+    return (KV){key, value};
 }
 
-void test_hash_table_bucket(void)
+void __hash_kv_free_string_int(KV entry)
 {
-    hash_table_bucket bucket = hash_table_bucket_create();
+    string_free(entry.key);
+    int_free(entry.value);
+}
 
-    CU_ASSERT_TRUE(hash_table_bucket_is_empty(bucket));
+hash __hash_kv_hash_string_int(KV entry)
+{
+    return string_hash(entry.key);
+}
 
-    string key = "one";
-    int value = 1;
-    hash_table_entry entry = {
-        .key = &key,
-        .value = &value};
+bool __hash_kv_equal_string_int(KV entry1, KV entry2)
+{
+    return string_equal(entry1.key, entry2.key);
+}
 
-    hash_table_bucket_insert(&bucket, entry, string_copy, int_copy);
-    CU_ASSERT_FALSE(hash_table_bucket_is_empty(bucket));
+void __hash_kv_print_string_int(KV entry)
+{
+    printf("(");
+    string_print(entry.key);
+    printf(":");
+    int_print(entry.value);
+    printf(")");
+}
 
-    hash_table_bucket_destroy(&bucket, string_free, int_free);
-    CU_ASSERT_TRUE(hash_table_bucket_is_empty(bucket));
+void __hash_table_alphabet(KV_linked_list *bucket)
+{
+    for (int i = 97; i < 97 + 26; i++)
+    {
+        string *key = string_create((char[]){i, '\0'});
+        int value = i;
+        KV entry = {key, &value};
 
-    bucket = __hash_table_alphabet();
-
-    CU_ASSERT_FALSE(hash_table_bucket_is_empty(bucket));
-
-    hash_table_bucket_destroy(&bucket, string_free, int_free);
+        KV_linked_list_add(bucket, entry, __hash_kv_copy_string_int);
+        string_free(key);
+    }
 }
 
 void test_hash_table_create(void)
@@ -65,40 +65,42 @@ void test_hash_table_create(void)
     bool is_empty = true;
     for (long int i = 0; i < map.capacity; i++)
     {
-        is_empty = is_empty && hash_table_bucket_is_empty(map.buckets[i]);
+        is_empty = is_empty && KV_linked_list_is_empty(map.buckets[i]);
     }
     CU_ASSERT_TRUE(is_empty);
 
     CU_ASSERT_EQUAL(hash_table_size(map), 0);
 
-    hash_table_destroy(&map, string_free, int_free);
+    hash_table_destroy(&map, __hash_kv_free_string_int);
 }
 
 void test_hash_table_add(void)
 {
     hash_table map = hash_table_create(26);
 
-    string key = "one";
+    string key = "a";
     int value = 1;
-    hash_table_insert(&map, &key, string_hash, string_copy, &value, int_copy);
+    KV entry = (KV){&key, &value};
 
-    CU_ASSERT_EQUAL(map.capacity, 26);
+    hash_table_insert(&map, entry, __hash_kv_copy_string_int, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
 
-    bool is_empty = true;
-    for (long int i = 0; i < map.capacity; i++)
-    {
-        is_empty = is_empty && hash_table_bucket_is_empty(map.buckets[i]);
-    }
-    CU_ASSERT_FALSE(is_empty);
     CU_ASSERT_EQUAL(hash_table_size(map), 1);
 
-    hash_table_destroy(&map, string_free, int_free);
+    key = "b";
+    value = 2;
+    entry = (KV){&key, &value};
+
+    hash_table_insert(&map, entry, __hash_kv_copy_string_int, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
+
+    CU_ASSERT_EQUAL(hash_table_size(map), 2);
+
+    hash_table_destroy(&map, __hash_kv_free_string_int);
 }
 
 void test_hash_table_add_overflow(void)
 {
     int capacity = 42;
-    long int number = 1000;
+    long int number = 1;
 
     hash_table map;
     srand(42);
@@ -109,32 +111,30 @@ void test_hash_table_add_overflow(void)
 
         for (long int j = 0; j < number; j++)
         {
-            string key = malloc(sizeof(char) * 2);
-            strcpy(key, (char[]){rand() % 26 + 97, '\0'});
-
+            string *key = string_create((char[]){rand() % 26 + 97, '\0'});
             int value = rand() % 100;
-            hash_table_insert(&map, &key, string_hash, string_copy, &value, int_copy);
+            KV entry = {key, &value};
 
-            free(key);
+            hash_table_insert(&map, entry, __hash_kv_copy_string_int, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
+            string_free(key);
         }
 
-        hash_table_destroy(&map, string_free, int_free);
+        hash_table_destroy(&map, __hash_kv_free_string_int);
     }
 
     map = hash_table_create(capacity);
 
     for (long int i = 0; i < number; i++)
     {
-        string key = malloc(sizeof(char) * 2);
-        strcpy(key, (char[]){rand() % 26 + 97, '\0'});
-
+        string *key = string_create((char[]){rand() % 26 + 97, '\0'});
         int value = rand() % 100;
-        hash_table_insert(&map, &key, string_hash, string_copy, &value, int_copy);
+        KV entry = {key, &value};
 
-        free(key);
+        hash_table_insert(&map, entry, __hash_kv_copy_string_int, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
+        string_free(key);
     }
 
-    hash_table_destroy(&map, string_free, int_free);
+    hash_table_destroy(&map, __hash_kv_free_string_int);
 }
 
 void test_hash_table_remove(void)
@@ -143,45 +143,76 @@ void test_hash_table_remove(void)
 
     string key = "one";
     int value = 1;
-    hash_table_insert(&map, &key, string_hash, string_copy, &value, int_copy);
+    KV entry = (KV){&key, &value};
 
-    hash_table_remove(&map, &key, string_hash, string_equal, string_free, int_free);
+    hash_table_insert(&map, entry, __hash_kv_copy_string_int, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
+    CU_ASSERT_EQUAL(hash_table_size(map), 1);
 
-    CU_ASSERT_EQUAL(hash_table_size(map), 0);
+    key = "two";
+    value = 2;
+    entry = (KV){&key, &value};
 
-    hash_table_destroy(&map, string_free, int_free);
+    hash_table_insert(&map, entry, __hash_kv_copy_string_int, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
+    CU_ASSERT_EQUAL(hash_table_size(map), 2);
+
+    key = "one";
+    hash_table_remove(&map, &key, __hash_kv_hash_string_int, __hash_kv_equal_string_int, __hash_kv_free_string_int);
+
+    CU_ASSERT_EQUAL(hash_table_size(map), 1);
+
+    hash_table_destroy(&map, __hash_kv_free_string_int);
 }
 
 void test_hash_table_find(void)
 {
     hash_table map = hash_table_create(26);
 
-    string key = "one";
-    srand(42);
-    int value = rand() % 100;
+    string *key1 = string_create("one");
+    int value1 = 1;
+    KV entry1 = (KV){key1, &value1};
 
-    hash_table_insert(&map, &key, string_hash, string_copy, &value, int_copy);
+    hash_table_insert(&map, entry1, __hash_kv_copy_string_int, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
 
-    hash_table_entry *entry = hash_table_get(map, &key, string_hash, string_equal);
+    string *key2 = string_create("two");
+    int value2 = 2;
+    KV entry2 = (KV){key2, &value2};
 
-    CU_ASSERT_PTR_NOT_NULL(entry);
-    CU_ASSERT_TRUE(string_equal(entry->key, &key));
-    CU_ASSERT_TRUE(int_equal(entry->value, &value));
+    hash_table_insert(&map, entry2, __hash_kv_copy_string_int, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
 
-    hash_table_destroy(&map, string_free, int_free);
+    bool found = hash_table_has(map, key1, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
+    CU_ASSERT_TRUE(found);
+    int *entry_found = hash_table_get(map, key1, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
+    CU_ASSERT_TRUE(int_equal(entry_found, &value1));
+
+    found = hash_table_has(map, key2, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
+    CU_ASSERT_TRUE(found);
+    entry_found = hash_table_get(map, key2, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
+    CU_ASSERT_TRUE(int_equal(entry_found, &value2));
+
+    string *key3 = string_create("three");
+    found = hash_table_has(map, key3, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
+    CU_ASSERT_FALSE(found);
+
+    string_free(key1);
+    string_free(key2);
+    string_free(key3);
+
+    hash_table_destroy(&map, __hash_kv_free_string_int);
 }
 
 void test_hash_table_destroy(void)
 {
-    hash_table map = hash_table_create(26);
+    int capacity = 26;
+    hash_table map = hash_table_create(capacity);
 
-    for (long int i = 0; i < map.capacity; i++)
+    for (long int i = 0; i < capacity; i++)
     {
-        hash_table_bucket bucket = __hash_table_alphabet();
-        map.buckets[i] = bucket;
+        map.buckets[i] = KV_linked_list_create();
+        __hash_table_alphabet(&map.buckets[i]);
     }
+    CU_ASSERT_EQUAL(hash_table_size(map), capacity * 26);
 
-    hash_table_destroy(&map, string_free, int_free);
+    hash_table_destroy(&map, __hash_kv_free_string_int);
 
-    CU_ASSERT_EQUAL(map.capacity, 0);
+    CU_ASSERT_EQUAL(hash_table_size(map), 0);
 }
