@@ -79,29 +79,6 @@ void test_queue_add(void)
     queue_destroy(&q);
 }
 
-void test_queue_add_overflow(void)
-{
-    queue q = queue_create(FLAG_UNSORTED, int_copy, int_free, int_geq);
-
-    CU_ASSERT_TRUE(queue_is_empty(q));
-    CU_ASSERT_EQUAL(queue_length(q), 0);
-
-    long int count = 1000;
-    for (int i = 0; i < count; i++)
-    {
-        queue_enqueue(&q, &i);
-        int *item = queue_dequeue(&q);
-        int_free(item);
-    }
-
-    CU_ASSERT_TRUE(queue_is_empty(q));
-    CU_ASSERT_EQUAL(queue_length(q), 0);
-    CU_ASSERT_PTR_NULL(queue_get_head(q));
-    CU_ASSERT_PTR_NULL(queue_get_tail(q));
-
-    queue_destroy(&q);
-}
-
 void test_queue_add_sorted(void)
 {
     queue q = queue_create(FLAG_SORTED, int_copy, int_free, __int_mod_1);

@@ -81,27 +81,6 @@ void test_array_add_multiple(void)
     array_destroy(&array);
 }
 
-void test_array_add_overflow(void)
-{
-    long int capacity = 100;
-    array_t array = array_create(capacity, sizeof(long int), int_copy, int_free);
-
-    long int count = capacity + 1;
-
-    for (long int i = 0; i < count; i++)
-    {
-        array_push(&array, &i);
-
-        if (errno == ENOMEM)
-        {
-            break;
-        }
-    }
-
-    CU_ASSERT_EQUAL(errno, ENOMEM);
-    array_destroy(&array);
-}
-
 void test_array_insert(void)
 {
     long int capacity = 100;

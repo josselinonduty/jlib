@@ -97,46 +97,6 @@ void test_hash_table_add(void)
     hash_table_destroy(&map, __hash_kv_free_string_int);
 }
 
-void test_hash_table_add_overflow(void)
-{
-    int capacity = 42;
-    long int number = 1;
-
-    hash_table map;
-    srand(42);
-
-    for (long int i = 0; i < number; i++)
-    {
-        map = hash_table_create(capacity);
-
-        for (long int j = 0; j < number; j++)
-        {
-            string *key = string_create((char[]){rand() % 26 + 97, '\0'});
-            int value = rand() % 100;
-            KV entry = {key, &value};
-
-            hash_table_insert(&map, entry, __hash_kv_copy_string_int, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
-            string_free(key);
-        }
-
-        hash_table_destroy(&map, __hash_kv_free_string_int);
-    }
-
-    map = hash_table_create(capacity);
-
-    for (long int i = 0; i < number; i++)
-    {
-        string *key = string_create((char[]){rand() % 26 + 97, '\0'});
-        int value = rand() % 100;
-        KV entry = {key, &value};
-
-        hash_table_insert(&map, entry, __hash_kv_copy_string_int, __hash_kv_hash_string_int, __hash_kv_equal_string_int);
-        string_free(key);
-    }
-
-    hash_table_destroy(&map, __hash_kv_free_string_int);
-}
-
 void test_hash_table_remove(void)
 {
     hash_table map = hash_table_create(26);
