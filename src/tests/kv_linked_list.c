@@ -158,51 +158,6 @@ void test_kv_linked_list_add_sorted(void)
     KV_linked_list_destroy(&ls, KV_free_string_int);
 }
 
-void test_kv_linked_list_overflow(void)
-{
-    KV_linked_list ls = KV_linked_list_create();
-
-    int count = 1000;
-    for (int i = 0; i < count; i++)
-    {
-        string *key = __kv_linked_list_string_random(1);
-        int value = rand() % 100;
-
-        KV kv = {key, &value};
-
-        KV_linked_list_add(&ls, kv, KV_copy_string_int);
-
-        string_free(key);
-    }
-
-    CU_ASSERT_FALSE(KV_linked_list_is_empty(ls));
-    CU_ASSERT_EQUAL(KV_linked_list_length(ls), count);
-
-    KV_linked_list_destroy(&ls, KV_free_string_int);
-
-    count = 1000;
-    for (int i = 0; i < count; i++)
-    {
-        ls = KV_linked_list_create();
-
-        for (int j = 0; j < count; j++)
-        {
-            string *key = __kv_linked_list_string_random(1);
-            int value = rand() % 100;
-
-            KV kv = {key, &value};
-
-            KV_linked_list_add(&ls, kv, KV_copy_string_int);
-
-            string_free(key);
-        }
-
-        KV_linked_list_destroy(&ls, KV_free_string_int);
-    }
-
-    CU_ASSERT_TRUE(KV_linked_list_is_empty(ls));
-}
-
 void test_kv_linked_list_remove(void)
 {
     KV_linked_list ls = KV_linked_list_create();

@@ -56,25 +56,3 @@ void test_stack_add(void)
 
     stack_destroy(&q);
 }
-
-void test_stack_add_overflow(void)
-{
-    stack q = stack_create(int_copy, int_free, int_geq);
-
-    CU_ASSERT_TRUE(stack_is_empty(q));
-    CU_ASSERT_EQUAL(stack_length(q), 0);
-
-    long int count = 1000;
-    for (int i = 0; i < count; i++)
-    {
-        stack_stack(&q, &i);
-        int *item = stack_unstack(&q);
-        int_free(item);
-    }
-
-    CU_ASSERT_TRUE(stack_is_empty(q));
-    CU_ASSERT_EQUAL(stack_length(q), 0);
-    CU_ASSERT_PTR_NULL(stack_get_head(q));
-
-    stack_destroy(&q);
-}

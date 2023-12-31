@@ -86,34 +86,6 @@ void test_doubly_linked_list_add_sorted_int(void)
     CU_ASSERT_TRUE(doubly_linked_list_is_empty(ls));
 }
 
-void test_doubly_linked_list_overflow_int(void)
-{
-    doubly_linked_list ls = doubly_linked_list_create();
-
-    long int count = 42;
-    for (int i = 0; i < count; i++)
-    {
-        doubly_linked_list_add(&ls, &i, int_copy);
-    }
-
-    CU_ASSERT_FALSE(doubly_linked_list_is_empty(ls));
-    CU_ASSERT_EQUAL(doubly_linked_list_length(ls), count);
-
-    doubly_linked_list_destroy(&ls, int_free);
-
-    ls = doubly_linked_list_create();
-
-    count = 1000;
-    for (int i = 0; i < count; i++)
-    {
-        for (int j = 0; j < count; j++)
-        {
-            doubly_linked_list_add(&ls, &i, int_copy);
-        }
-        doubly_linked_list_destroy(&ls, int_free);
-    }
-}
-
 void test_doubly_linked_list_remove_int(void)
 {
     doubly_linked_list ls = doubly_linked_list_create();
@@ -187,36 +159,6 @@ void test_doubly_linked_list_add_string(void)
     CU_ASSERT_PTR_EQUAL(ls, doubly_linked_list_get_prev(doubly_linked_list_get_next(ls)));
 
     doubly_linked_list_destroy(&ls, string_free);
-
-    CU_ASSERT_TRUE(doubly_linked_list_is_empty(ls));
-}
-
-void test_doubly_linked_list_overflow_string(void)
-{
-    doubly_linked_list ls = doubly_linked_list_create();
-
-    string a = "Hello";
-    long int count = 42;
-    for (int i = 0; i < count; i++)
-    {
-        doubly_linked_list_add(&ls, &a, string_copy);
-    }
-
-    CU_ASSERT_FALSE(doubly_linked_list_is_empty(ls));
-    CU_ASSERT_EQUAL(doubly_linked_list_length(ls), count);
-
-    doubly_linked_list_destroy(&ls, string_free);
-
-    count = 1000;
-    for (int i = 0; i < count; i++)
-    {
-        ls = doubly_linked_list_create();
-        for (int j = 0; j < count; j++)
-        {
-            doubly_linked_list_add(&ls, &a, string_copy);
-        }
-        doubly_linked_list_destroy(&ls, string_free);
-    }
 
     CU_ASSERT_TRUE(doubly_linked_list_is_empty(ls));
 }

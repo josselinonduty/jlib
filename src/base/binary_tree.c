@@ -1,110 +1,126 @@
-#include <CUnit/CUnit.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
 #include "base/generic.h"
-#include "base/int.h"
 #include "base/binary_tree.h"
 
-void test_binary_tree_create(void)
+binary_tree binary_tree_create(any data, generic_copy copy_fn)
 {
-    int a = 1;
-    binary_tree tree = binary_tree_create(&a, int_copy);
-
-    CU_ASSERT_PTR_NOT_NULL(tree);
-    CU_ASSERT_PTR_NOT_NULL(tree->data);
-    CU_ASSERT_TRUE(binary_tree_is_leaf(tree));
-    CU_ASSERT_TRUE(int_equal(binary_tree_get_data(tree), &a));
-
-    CU_ASSERT_PTR_NULL(tree->left);
-    CU_ASSERT_PTR_NULL(tree->right);
-
-    binary_tree_destroy(&tree, int_free);
-    CU_ASSERT_PTR_NULL(tree);
-}
-
-void test_binary_tree_add(void)
-{
-    int a = 1;
-    int b = 2;
-    int c = 3;
-    binary_tree left = binary_tree_create(&b, int_copy);
-    binary_tree right = binary_tree_create(&c, int_copy);
-
-    binary_tree tree = binary_tree_add_root(left, right, &a, int_copy);
-
-    CU_ASSERT_PTR_NOT_NULL(tree);
-    CU_ASSERT_PTR_NOT_NULL(binary_tree_get_data(tree));
-    CU_ASSERT_FALSE(binary_tree_is_leaf(tree));
-    CU_ASSERT_TRUE(int_equal(binary_tree_get_data(tree), &a));
-
-    CU_ASSERT_PTR_NOT_NULL(binary_tree_get_left(tree));
-    CU_ASSERT_PTR_NOT_NULL(binary_tree_get_right(tree));
-
-    CU_ASSERT_TRUE(int_equal(binary_tree_get_data(binary_tree_get_left(tree)), &b));
-    CU_ASSERT_TRUE(int_equal(binary_tree_get_data(binary_tree_get_right(tree)), &c));
-
-    binary_tree_destroy(&tree, int_free);
-    CU_ASSERT_PTR_NULL(tree);
-}
-
-void test_binary_tree_add_overflow(void)
-{
-    long int count = 1000;
-
-    binary_tree tree = NULL;
-    binary_tree left = NULL;
-    binary_tree right = NULL;
-    for (int i = 0; i < count; i++)
+    binary_tree tree = (binary_tree)malloc(sizeof(binary_tree_node));
+    if (NULL == tree)
     {
-        int a = 1;
-        int b = 2;
-        int c = 3;
-        left = binary_tree_create(&b, int_copy);
-        right = binary_tree_create(&c, int_copy);
-
-        tree = binary_tree_add_root(left, right, &a, int_copy);
-        binary_tree_destroy(&tree, int_free);
+        errno = ENOMEM;
+        return NULL;
     }
 
-    for (int i = 0; i < count; i++)
-    {
-        tree = binary_tree_create(&i, int_copy);
-
-        for (int j = 0; j < count; j++)
-        {
-            left = binary_tree_create(&j, int_copy);
-            right = binary_tree_create(&j, int_copy);
-
-            binary_tree_destroy(&tree, int_free);
-            tree = binary_tree_add_root(left, right, &j, int_copy);
-        }
-
-        binary_tree_destroy(&tree, int_free);
-    }
-
-    CU_ASSERT_PTR_NULL(tree);
+    binary_tree_set_data(tree, data, copy_fn);
+    binary_tree_set_left(tree, NULL);
+    binary_tree_set_right(tree, NULL);
+    return tree;
 }
 
-void test_binary_tree_remove(void)
+bool binary_tree_is_leaf(binary_tree tree)
 {
-    int a = 1;
-    int b = 2;
-    int c = 3;
-    binary_tree left = binary_tree_create(&b, int_copy);
-    binary_tree right = binary_tree_create(&c, int_copy);
+    return (NULL == tree->left && NULL == tree->right);
+}
 
-    binary_tree tree = binary_tree_add_root(left, right, &a, int_copy);
+any binary_tree_get_data(binary_tree tree)
+{
+    return tree->data;
+}
 
-    CU_ASSERT_PTR_NOT_NULL(tree);
-    CU_ASSERT_PTR_NOT_NULL(binary_tree_get_data(tree));
-    CU_ASSERT_FALSE(binary_tree_is_leaf(tree));
-    CU_ASSERT_TRUE(int_equal(binary_tree_get_data(tree), &a));
+void binary_tree_set_data(binary_tree tree, any data, generic_copy copy_fn)
+{
+    tree->data = copy_fn(data);
+}
 
-    CU_ASSERT_PTR_NOT_NULL(binary_tree_get_left(tree));
-    CU_ASSERT_PTR_NOT_NULL(binary_tree_get_right(tree));
+binary_tree binary_tree_get_left(binary_tree tree)
+{
+    if (binary_tree_is_leaf(tree))
+    {
+        errno = ENOMEM;
+        return NULL;
+    }
 
-    CU_ASSERT_TRUE(int_equal(binary_tree_get_data(binary_tree_get_left(tree)), &b));
-    CU_ASSERT_TRUE(int_equal(binary_tree_get_data(binary_tree_get_right(tree)), &c));
+    return tree->left;
+}
 
-    binary_tree_destroy(&tree, int_free);
-    CU_ASSERT_PTR_NULL(tree);
+void binary_tree_set_left(binary_tree tree, binary_tree left)
+{
+    tree->left = left;
+}
+
+binary_tree binary_tree_get_right(binary_tree tree)
+{
+    if (binary_tree_is_leaf(tree))
+    {
+        errno = ENOMEM;
+        return NULL;
+    }
+
+    return tree->right;
+}
+
+void binary_tree_set_right(binary_tree tree, binary_tree right)
+{
+    tree->right = right;
+}
+
+binary_tree binary_tree_add_root(binary_tree left, binary_tree right, any data, generic_copy copy_fn)
+{
+    binary_tree tree = binary_tree_create(data, copy_fn);
+    if (NULL == tree)
+    {
+        errno = ENOMEM;
+        return NULL;
+    }
+
+    binary_tree_set_left(tree, left);
+    binary_tree_set_right(tree, right);
+    return tree;
+}
+
+void binary_tree_destroy(binary_tree *tree, generic_free free_fn)
+{
+    if (NULL == *tree)
+    {
+        return;
+    }
+
+    free_fn(binary_tree_get_data(*tree));
+    binary_tree_destroy(&(*tree)->left, free_fn);
+    binary_tree_destroy(&(*tree)->right, free_fn);
+    free(*tree);
+    *tree = NULL;
+}
+
+void binary_tree_print(binary_tree tree, binary_tree_print_strategy strategy, generic_print print_fn)
+{
+    if (NULL == tree)
+    {
+        return;
+    }
+
+    switch (strategy)
+    {
+    case BINARY_TREE_PRINT_STRATEGY_ROOT_LEFT_RIGHT:
+        print_fn(binary_tree_get_data(tree));
+        binary_tree_print(binary_tree_get_left(tree), strategy, print_fn);
+        binary_tree_print(binary_tree_get_right(tree), strategy, print_fn);
+        break;
+    case BINARY_TREE_PRINT_STRATEGY_LEFT_ROOT_RIGHT:
+        binary_tree_print(binary_tree_get_left(tree), strategy, print_fn);
+        print_fn(binary_tree_get_data(tree));
+        binary_tree_print(binary_tree_get_right(tree), strategy, print_fn);
+        break;
+    case BINARY_TREE_PRINT_STRATEGY_LEFT_RIGHT_ROOT:
+        binary_tree_print(binary_tree_get_left(tree), strategy, print_fn);
+        binary_tree_print(binary_tree_get_right(tree), strategy, print_fn);
+        print_fn(binary_tree_get_data(tree));
+        break;
+    default:
+        break;
+    }
 }

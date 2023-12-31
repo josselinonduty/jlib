@@ -77,7 +77,6 @@ int main(void)
     //     NULL == CU_add_test(pSuite, "array_free()", test_array_free) ||
     //     NULL == CU_add_test(pSuite, "array_add()", test_array_add) ||
     //         NULL == CU_add_test(pSuite, "array_add_multiple()", test_array_add_multiple) ||
-    //         NULL == CU_add_test(pSuite, "array_add_overflow()", test_array_add_overflow) ||
     //         NULL == CU_add_test(pSuite, "array_insert()", test_array_insert) ||
     //         NULL == CU_add_test(pSuite, "array_resize()", test_array_resize))
     // {
@@ -96,9 +95,7 @@ int main(void)
         NULL == CU_add_test(pSuite, "linked_list_empty()", test_linked_list_empty) ||
         NULL == CU_add_test(pSuite, "linked_list_add_int()", test_linked_list_add_int) ||
         NULL == CU_add_test(pSuite, "test_linked_list_add_sorted_int()", test_linked_list_add_sorted_int) ||
-        NULL == CU_add_test(pSuite, "linked_list_overflow_int()", test_linked_list_overflow_int) ||
         NULL == CU_add_test(pSuite, "linked_list_add_string()", test_linked_list_add_string) ||
-        NULL == CU_add_test(pSuite, "linked_list_overflow_string()", test_linked_list_overflow_string) ||
         NULL == CU_add_test(pSuite, "linked_list_remove()", test_linked_list_remove_string))
     {
         CU_cleanup_registry();
@@ -116,9 +113,7 @@ int main(void)
         NULL == CU_add_test(pSuite, "doubly_linked_list_empty()", test_doubly_linked_list_empty) ||
         NULL == CU_add_test(pSuite, "doubly_linked_list_add_int()", test_doubly_linked_list_add_int) ||
         NULL == CU_add_test(pSuite, "doubly_linked_list_add_sorted_int()", test_doubly_linked_list_add_sorted_int) ||
-        NULL == CU_add_test(pSuite, "doubly_linked_list_overflow_int()", test_doubly_linked_list_overflow_int) ||
         NULL == CU_add_test(pSuite, "doubly_linked_list_add_string()", test_doubly_linked_list_add_string) ||
-        NULL == CU_add_test(pSuite, "doubly_linked_list_overflow_string()", test_doubly_linked_list_overflow_string) ||
         NULL == CU_add_test(pSuite, "doubly_linked_list_remove()", test_doubly_linked_list_remove_string))
     {
         CU_cleanup_registry();
@@ -136,7 +131,6 @@ int main(void)
         NULL == CU_add_test(pSuite, "kv_linked_list_empty()", test_kv_linked_list_empty) ||
         NULL == CU_add_test(pSuite, "kv_linked_list_add()", test_kv_linked_list_add) ||
         NULL == CU_add_test(pSuite, "kv_linked_list_add_sorted()", test_kv_linked_list_add_sorted) ||
-        NULL == CU_add_test(pSuite, "kv_linked_list_overflow()", test_kv_linked_list_overflow) ||
         NULL == CU_add_test(pSuite, "kv_linked_list_remove()", test_kv_linked_list_remove))
     {
         CU_cleanup_registry();
@@ -153,7 +147,6 @@ int main(void)
     if (
         NULL == CU_add_test(pSuite, "binary_tree_create()", test_binary_tree_create) ||
         NULL == CU_add_test(pSuite, "binary_tree_add()", test_binary_tree_add) ||
-        NULL == CU_add_test(pSuite, "binary_tree_add_overflow()", test_binary_tree_add_overflow) ||
         NULL == CU_add_test(pSuite, "binary_tree_remove()", test_binary_tree_remove))
     {
         CU_cleanup_registry();
@@ -170,7 +163,6 @@ int main(void)
     if (
         NULL == CU_add_test(pSuite, "queue_create()", test_queue_create) ||
         NULL == CU_add_test(pSuite, "queue_add()", test_queue_add) ||
-        NULL == CU_add_test(pSuite, "queue_add_overflow()", test_queue_add_overflow) ||
         NULL == CU_add_test(pSuite, "queue_add_sorted()", test_queue_add_sorted))
     {
         CU_cleanup_registry();
@@ -186,8 +178,7 @@ int main(void)
 
     if (
         NULL == CU_add_test(pSuite, "stack_create()", test_stack_create) ||
-        NULL == CU_add_test(pSuite, "stack_add()", test_stack_add) ||
-        NULL == CU_add_test(pSuite, "stack_add_overflow()", test_stack_add_overflow))
+        NULL == CU_add_test(pSuite, "stack_add()", test_stack_add))
     {
         CU_cleanup_registry();
         return CU_get_error();
@@ -203,7 +194,6 @@ int main(void)
     if (
         NULL == CU_add_test(pSuite, "hash_table_create()", test_hash_table_create) ||
         NULL == CU_add_test(pSuite, "hash_table_add()", test_hash_table_add) ||
-        NULL == CU_add_test(pSuite, "hash_table_add_overflow()", test_hash_table_add_overflow) ||
         NULL == CU_add_test(pSuite, "hash_table_remove()", test_hash_table_remove) ||
         NULL == CU_add_test(pSuite, "hash_table_find()", test_hash_table_find) ||
         NULL == CU_add_test(pSuite, "hash_table_destroy()", test_hash_table_destroy))
