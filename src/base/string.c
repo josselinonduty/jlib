@@ -7,6 +7,32 @@
 #include "base/string.h"
 
 /**
+ * @brief Creates a string based on the generic create function.
+ * @param value The value to create.
+ * @return any The created value.
+ */
+any string_create(string value)
+{
+    string *str = malloc(sizeof(string));
+    if (NULL == str)
+    {
+        errno = ENOMEM;
+        return NULL;
+    }
+
+    *str = malloc(strlen(value) + 1);
+    if (NULL == *str)
+    {
+        errno = ENOMEM;
+        free(str);
+        return NULL;
+    }
+
+    strcpy(*str, value);
+    return str;
+}
+
+/**
  * @brief Copies a string based on the generic copy function.
  * @param value The value to copy.
  * @return any The copied value.

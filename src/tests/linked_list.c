@@ -53,7 +53,7 @@ void test_linked_list_add_sorted_int(void)
     for (int i = 0; i < count; i++)
     {
         int random = rand() % count;
-        linked_list_add_sorted(&ls, &random, int_copy, int_geq);
+        linked_list_add_sorted(&ls, &random, int_copy, int_leq);
     }
 
     CU_ASSERT_FALSE(linked_list_is_empty(ls));

@@ -8,6 +8,7 @@
 #include "tests/array.h"
 #include "tests/linked_list.h"
 #include "tests/doubly_linked_list.h"
+#include "tests/kv_linked_list.h"
 #include "tests/binary_tree.h"
 #include "tests/queue.h"
 #include "tests/stack.h"
@@ -55,6 +56,7 @@ int main(void)
         NULL == CU_add_test(pSuite, "int_equal()", test_int_equal) ||
         NULL == CU_add_test(pSuite, "int_leq()", test_int_leq) ||
         NULL == CU_add_test(pSuite, "int_geq()", test_int_geq) ||
+        NULL == CU_add_test(pSuite, "string_create()", test_string_create) ||
         NULL == CU_add_test(pSuite, "string_copy()", test_string_copy) ||
         NULL == CU_add_test(pSuite, "string_equal()", test_string_equal))
     {
@@ -123,6 +125,24 @@ int main(void)
         return CU_get_error();
     }
 
+    pSuite = CU_add_suite("KV Linked List", init_suite, clean_suite);
+    if (NULL == pSuite)
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if (
+        NULL == CU_add_test(pSuite, "kv_linked_list_empty()", test_kv_linked_list_empty) ||
+        NULL == CU_add_test(pSuite, "kv_linked_list_add()", test_kv_linked_list_add) ||
+        NULL == CU_add_test(pSuite, "kv_linked_list_add_sorted()", test_kv_linked_list_add_sorted) ||
+        NULL == CU_add_test(pSuite, "kv_linked_list_overflow()", test_kv_linked_list_overflow) ||
+        NULL == CU_add_test(pSuite, "kv_linked_list_remove()", test_kv_linked_list_remove))
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
     pSuite = CU_add_suite("Binary Tree", init_suite, clean_suite);
     if (NULL == pSuite)
     {
@@ -181,11 +201,11 @@ int main(void)
     }
 
     if (
-        NULL == CU_add_test(pSuite, "hash_table_bucket()", test_hash_table_bucket) ||
         NULL == CU_add_test(pSuite, "hash_table_create()", test_hash_table_create) ||
         NULL == CU_add_test(pSuite, "hash_table_add()", test_hash_table_add) ||
         NULL == CU_add_test(pSuite, "hash_table_add_overflow()", test_hash_table_add_overflow) ||
         NULL == CU_add_test(pSuite, "hash_table_remove()", test_hash_table_remove) ||
+        NULL == CU_add_test(pSuite, "hash_table_find()", test_hash_table_find) ||
         NULL == CU_add_test(pSuite, "hash_table_destroy()", test_hash_table_destroy))
     {
         CU_cleanup_registry();

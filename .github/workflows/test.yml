@@ -17,4 +17,4 @@ jobs:
       - name: Test
         run: make tests
       - name: Leaks
-        run: make debug
+        run: make debug/headless

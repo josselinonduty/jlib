@@ -2,6 +2,16 @@
 #include "base/string.h"
 #include "tests/string.h"
 
+void test_string_create(void)
+{
+    string value = "Hello, World!";
+    string *string = string_create(value);
+
+    CU_ASSERT_STRING_EQUAL(*string, value);
+
+    string_free(string);
+}
+
 void test_string_copy(void)
 {
     string value = "Hello, World!";
