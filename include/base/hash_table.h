@@ -1,3 +1,11 @@
+/**
+ * \file hash_table.h
+ * \brief Types and functions for hash map
+ * \author Josselin Dulongcourty
+ * \version 2.0.1
+ * \date 2023-12-31
+ */
+
 #ifndef __HASH_TABLE_H__
 #define __HASH_TABLE_H__
 
@@ -13,7 +21,7 @@
 typedef struct hash_table hash_table;
 
 /**
- * \internal
+ * \private
  * \struct hash_table
  * \brief Hash map type.
  */
