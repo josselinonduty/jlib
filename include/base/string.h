@@ -5,6 +5,7 @@
 #include "base/generic.h"
 
 typedef char *string;
+any string_create(string);
 any string_copy(any);
 void string_free(any);
 bool string_equal(any, any);
