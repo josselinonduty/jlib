@@ -2,8 +2,8 @@
  * \file generic.h
  * \brief Generic types and functions.
  * \author Josselin Dulongcourty
- * \version 1.0
- * \date 2023-12-06
+ * \version 1.1.1
+ * \date 2023-12-31
  */
 
 #ifndef __GENERIC_H__

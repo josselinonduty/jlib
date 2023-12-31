@@ -105,17 +105,17 @@ void binary_tree_print(binary_tree tree, binary_tree_print_strategy strategy, ge
 
     switch (strategy)
     {
-    case ROOT_LEFT_RIGHT:
+    case BINARY_TREE_PRINT_STRATEGY_ROOT_LEFT_RIGHT:
         print_fn(binary_tree_get_data(tree));
         binary_tree_print(binary_tree_get_left(tree), strategy, print_fn);
         binary_tree_print(binary_tree_get_right(tree), strategy, print_fn);
         break;
-    case LEFT_ROOT_RIGHT:
+    case BINARY_TREE_PRINT_STRATEGY_LEFT_ROOT_RIGHT:
         binary_tree_print(binary_tree_get_left(tree), strategy, print_fn);
         print_fn(binary_tree_get_data(tree));
         binary_tree_print(binary_tree_get_right(tree), strategy, print_fn);
         break;
-    case LEFT_RIGHT_ROOT:
+    case BINARY_TREE_PRINT_STRATEGY_LEFT_RIGHT_ROOT:
         binary_tree_print(binary_tree_get_left(tree), strategy, print_fn);
         binary_tree_print(binary_tree_get_right(tree), strategy, print_fn);
         print_fn(binary_tree_get_data(tree));
