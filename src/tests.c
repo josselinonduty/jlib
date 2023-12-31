@@ -201,11 +201,11 @@ int main(void)
     }
 
     if (
-        NULL == CU_add_test(pSuite, "hash_table_bucket()", test_hash_table_bucket) ||
         NULL == CU_add_test(pSuite, "hash_table_create()", test_hash_table_create) ||
         NULL == CU_add_test(pSuite, "hash_table_add()", test_hash_table_add) ||
         NULL == CU_add_test(pSuite, "hash_table_add_overflow()", test_hash_table_add_overflow) ||
         NULL == CU_add_test(pSuite, "hash_table_remove()", test_hash_table_remove) ||
+        NULL == CU_add_test(pSuite, "hash_table_find()", test_hash_table_find) ||
         NULL == CU_add_test(pSuite, "hash_table_destroy()", test_hash_table_destroy))
     {
         CU_cleanup_registry();
