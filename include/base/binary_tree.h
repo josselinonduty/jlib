@@ -13,7 +13,7 @@
 #include "base/generic.h"
 
 /**
- * \private
+ * \internal
  * \brief Binary tree node
  * \typedef binary_tree_node
  */
@@ -26,7 +26,7 @@ typedef struct binary_tree_node binary_tree_node;
 typedef binary_tree_node *binary_tree;
 
 /**
- * \private
+ * \internal
  * \brief Binary tree node
  * \struct binary_tree_node
  */
