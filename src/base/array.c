@@ -1,182 +1,256 @@
-/**
- * @file src/types/array.c
- * @brief Functions related to dynamic arrays.
- * @author Josselin Dulongcourty
- * @version 1.0.0
- * @date 2023-12-08
- */
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
 #include <errno.h>
 
 #include "base/generic.h"
 #include "base/array.h"
 
-array_t array_create(long int capacity, long int element_size, generic_copy copy_fn, generic_free free_fn)
+/**
+ * \internal
+ * \brief Makes a cell empty
+ * \param array The dynamic array
+ * \param index The index of the cell to make empty
+ */
+void __array_empty_cell(array *arr, unsigned long int index)
 {
-    array_t array;
-    array.capacity = capacity;
-    array.size = 0;
-    array.element_size = element_size;
-    array.copy = copy_fn;
-    array.free = free_fn;
+    assert(NULL != arr);
+    assert(index >= 0 && index < arr->capacity);
 
-    array.data = (any *)malloc(capacity * element_size);
-    if (NULL == array.data)
+    arr->data[index] = NULL;
+}
+
+/**
+ * \internal
+ * \brief Fits the size of the array to the number of elements
+ * \param array The dynamic array
+ */
+void __array_fit_size(array *arr)
+{
+    assert(NULL != arr);
+
+    while (arr->size > 0 && NULL == arr->data[arr->size - 1])
     {
-        printf("Error: malloc failed in array_create()\n");
+        arr->size--;
+    }
+}
+
+array array_create(unsigned long int capacity, unsigned long int initial_size)
+{
+    assert(capacity > 0);
+    assert(initial_size >= 0 && initial_size <= capacity);
+
+    array arr;
+
+    arr.data = malloc(capacity * sizeof(any));
+    if (NULL == arr.data)
+    {
         errno = ENOMEM;
-        return array;
+        return arr;
     }
+    arr.size = initial_size;
+    arr.capacity = capacity;
 
-    for (long int i = 0; i < capacity; i++)
+    for (unsigned long int i = 0; i < capacity; i++)
     {
-        array.data[i] = NULL;
+        __array_empty_cell(&arr, i);
     }
-    return array;
+
+    return arr;
 }
 
-any *__array_data(array_t array)
+void array_destroy(array *arr, generic_free free_fn)
 {
-    return array.data;
+    assert(NULL != arr);
+
+    if (NULL != free_fn)
+    {
+        for (unsigned long int i = 0; i < array_size(*arr); i++)
+        {
+            free_fn(arr->data[i]);
+        }
+    }
+
+    free(arr->data);
+    arr->data = NULL;
+    arr->capacity = 0;
+    arr->size = 0;
 }
 
-any *__array_element_position_in_memory(array_t array, long int index)
+void array_push(array *arr, any element, generic_copy copy_fn)
 {
-    return array.data + index * array.element_size;
+    assert(NULL != arr);
+    assert(NULL != copy_fn);
+
+    if (array_is_full(*arr))
+    {
+        array_resize(arr, arr->capacity * 2);
+    }
+
+    arr->data[arr->size] = copy_fn(element);
+    arr->size++;
 }
 
-void array_destroy(array_t *array)
+any array_pop(array *arr, generic_free free_fn)
 {
-    free(array->data);
-    array->data = NULL;
+    assert(NULL != arr);
+    assert(!array_is_empty(*arr));
+
+    arr->size--;
+    any element = arr->data[array_size(*arr)];
+    if (NULL != free_fn)
+    {
+        free_fn(element);
+        element = NULL;
+    }
+
+    __array_empty_cell(arr, array_size(*arr));
+    __array_fit_size(arr);
+
+    if (!(array_is_empty(*arr)) && 3 * array_size(*arr) <= array_capacity(*arr))
+    {
+        array_resize(arr, array_capacity(*arr) / 2);
+    }
+
+    return element;
 }
 
-void array_push(array_t *array, any element)
+void array_remove(array *arr, unsigned long int index, generic_free free_fn)
 {
-    if (array_is_full(*array))
+    assert(NULL != arr);
+    assert(NULL != free_fn);
+    assert(index >= 0 && index < arr->size);
+
+    free_fn(arr->data[index]);
+    arr->data[index] = NULL;
+
+    for (unsigned long int i = index; i < arr->size - 1; i++)
+    {
+        arr->data[i] = arr->data[i + 1];
+    }
+
+    __array_empty_cell(arr, arr->size - 1);
+    __array_fit_size(arr);
+
+    if (!(array_is_empty(*arr)) && array_size(*arr) == array_capacity(*arr) / 4)
+    {
+        array_resize(arr, arr->capacity / 2);
+    }
+}
+
+void array_insert(array *arr, unsigned long int index, any element, generic_copy copy_fn)
+{
+    assert(NULL != arr);
+    assert(NULL != copy_fn);
+    assert(index >= 0 && index < array_size(*arr));
+
+    if (array_is_full(*arr))
+    {
+        array_resize(arr, arr->capacity * 2);
+    }
+
+    memmove(arr->data + index + 1, arr->data + index, (arr->size - index) * sizeof(any));
+    arr->data[index] = copy_fn(element);
+    arr->size++;
+}
+
+any array_get(array arr, unsigned long int index)
+{
+    assert(array_has(arr, index));
+    return arr.data[index];
+}
+
+bool array_has(array arr, unsigned long int index)
+{
+    assert(index >= 0 && index < array_capacity(arr));
+    return NULL != arr.data[index];
+}
+
+void array_set(array *arr, unsigned long int index, any element, generic_copy copy_fn, generic_free free_fn)
+{
+    assert(NULL != arr);
+    assert(NULL != copy_fn);
+    assert(NULL != free_fn);
+    assert(index >= 0 && index < array_capacity(*arr));
+
+    if (array_has(*arr, index))
+    {
+        free_fn(arr->data[index]);
+    }
+
+    arr->data[index] = copy_fn(element);
+
+    if (index >= arr->size)
+    {
+        arr->size = index + 1;
+    }
+}
+
+unsigned long int array_size(array arr)
+{
+    return arr.size;
+}
+
+unsigned long int array_capacity(array arr)
+{
+    return arr.capacity;
+}
+
+bool array_is_empty(array arr)
+{
+    return array_size(arr) == 0 && array_capacity(arr) > 0;
+}
+
+bool array_is_full(array arr)
+{
+    return array_size(arr) == array_capacity(arr);
+}
+
+void array_print(array arr, generic_print print_fn)
+{
+    assert(NULL != print_fn);
+
+    printf("[");
+    for (unsigned long int i = 0; i < arr.size; i++)
+    {
+        any data = arr.data[i];
+        if (NULL == data)
+        {
+            printf(" ");
+        }
+        else
+        {
+            print_fn(data);
+        }
+
+        if (i < arr.size - 1)
+        {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+}
+
+void array_resize(array *arr, unsigned long int capacity)
+{
+    assert(NULL != arr);
+    assert(capacity >= 0);
+    assert(capacity >= arr->size);
+
+    arr->data = realloc(arr->data, capacity * sizeof(any));
+    if (NULL == arr->data)
     {
         errno = ENOMEM;
         return;
     }
 
-    array_set(array, array->size, element);
-    array->size++;
-    errno = 0;
-}
+    arr->capacity = capacity;
+    arr->size = arr->size;
 
-void array_pop(array_t array)
-{
-    array_remove(array, array.size - 1);
-}
-
-void array_remove(array_t array, long int index)
-{
-    if (index >= array.capacity)
+    for (unsigned long int i = arr->size; i < capacity; i++)
     {
-        errno = ENOMEM;
-        return;
+        __array_empty_cell(arr, i);
     }
-
-    array.free(__array_element_position_in_memory(array, index));
-    array.size--;
-    errno = 0;
-}
-
-void array_insert(array_t *array, long int index, any element)
-{
-    if (index >= array->size)
-    {
-        errno = ENOMEM;
-        return;
-    }
-
-    // move elements to the right
-    for (long int i = array->size; i > index; i--)
-    {
-        array_set(array, i, array_get(*array, i - 1));
-    }
-
-    array_set(array, index, element);
-    array->size++;
-    errno = 0;
-}
-
-any array_get(array_t array, long int index)
-{
-    if (index >= array.capacity)
-    {
-        errno = ENOMEM;
-        return NULL;
-    }
-
-    return array.data[index];
-}
-
-void array_set(array_t *array, long int index, any element)
-{
-    if (index >= array->capacity)
-    {
-        errno = ENOMEM;
-        return;
-    }
-
-    if (array->data[index] != NULL)
-    {
-        array->free(array->data[index]);
-    }
-
-    any copy = array->copy(element);
-    array->data[index] = copy;
-    errno = 0;
-}
-
-long int array_size(array_t array)
-{
-    return array.size;
-}
-
-long int array_capacity(array_t array)
-{
-    return array.capacity;
-}
-
-bool array_is_empty(array_t array)
-{
-    return array.size == 0;
-}
-
-bool array_is_full(array_t array)
-{
-    return array.size == array.capacity;
-}
-
-void array_print(array_t array, generic_print print_fn)
-{
-    for (long int i = 0; i < array.size; i++)
-    {
-        printf("array[%lu] = ", i);
-        print_fn(array.data + i * array.size);
-        printf("\n");
-    }
-}
-
-void array_resize(array_t *array, long int capacity)
-{
-    if (capacity < array->size)
-    {
-        errno = EINVAL;
-        return;
-    }
-
-    array_t new_array = array_create(capacity, array->element_size, array->copy, array->free);
-    memcpy(new_array.data, array->data, array->size * array->element_size);
-    new_array.size = array->size;
-
-    array_destroy(array);
-    *array = new_array;
-    errno = 0;
 }
