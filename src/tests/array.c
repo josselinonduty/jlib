@@ -151,7 +151,7 @@ void test_array_remove(void)
     CU_ASSERT_EQUAL(array_size(arr), count * 2 + 1);
 
     int *pop = (int *)array_pop(&arr, NULL);
-    CU_ASSERT_TRUE(int_equal(&pop, &element));
+    CU_ASSERT_TRUE(int_equal(pop, &element));
     CU_ASSERT_EQUAL(array_size(arr), count - 1);
     int_free(pop);
 
