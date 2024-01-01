@@ -64,25 +64,24 @@ int main(void)
         return CU_get_error();
     }
 
-    // pSuite = CU_add_suite("Array", init_suite, clean_suite);
-    // if (NULL == pSuite)
-    // {
-    //     CU_cleanup_registry();
-    //     return CU_get_error();
-    // }
+    pSuite = CU_add_suite("Array", init_suite, clean_suite);
+    if (NULL == pSuite)
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
 
-    // if (
-    //     NULL == CU_add_test(pSuite, "array_create()", test_array_create) ||
-    //     NULL == CU_add_test(pSuite, "array_destroy()", test_array_destroy) ||
-    //     NULL == CU_add_test(pSuite, "array_free()", test_array_free) ||
-    //     NULL == CU_add_test(pSuite, "array_add()", test_array_add) ||
-    //         NULL == CU_add_test(pSuite, "array_add_multiple()", test_array_add_multiple) ||
-    //         NULL == CU_add_test(pSuite, "array_insert()", test_array_insert) ||
-    //         NULL == CU_add_test(pSuite, "array_resize()", test_array_resize))
-    // {
-    //     CU_cleanup_registry();
-    //     return CU_get_error();
-    // }
+    if (
+        NULL == CU_add_test(pSuite, "array_create()", test_array_create) ||
+        NULL == CU_add_test(pSuite, "array_add()", test_array_add) ||
+        NULL == CU_add_test(pSuite, "array_add_multiple()", test_array_add_multiple) ||
+        NULL == CU_add_test(pSuite, "array_insert()", test_array_insert) ||
+        NULL == CU_add_test(pSuite, "array_remove()", test_array_remove) ||
+        NULL == CU_add_test(pSuite, "array_resize()", test_array_resize))
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
 
     pSuite = CU_add_suite("Linked List", init_suite, clean_suite);
     if (NULL == pSuite)

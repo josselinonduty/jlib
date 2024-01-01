@@ -21,7 +21,7 @@
 typedef struct hash_table hash_table;
 
 /**
- * \private
+ * \internal
  * \struct hash_table
  * \brief Hash map type.
  */
