@@ -13,7 +13,7 @@
 #include "base/kv_generic.h"
 
 /**
- * \private
+ * \internal
  * \brief KV linked list node
  * \typedef KV_linked_list_node
  */
@@ -26,7 +26,7 @@ typedef struct KV_linked_list_node KV_linked_list_node;
 typedef KV_linked_list_node *KV_linked_list;
 
 /**
- * \private
+ * \internal
  * \brief KV linked list node
  * \struct KV_linked_list_node
  */

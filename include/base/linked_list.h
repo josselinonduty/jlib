@@ -13,7 +13,7 @@
 #include "base/generic.h"
 
 /**
- * \private
+ * \internal
  * \brief linked list node
  * \typedef linked_list_node
  */
@@ -26,7 +26,7 @@ typedef struct linked_list_node linked_list_node;
 typedef linked_list_node *linked_list;
 
 /**
- * \private
+ * \internal
  * \brief linked list node
  * \struct linked_list_node
  */

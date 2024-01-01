@@ -13,7 +13,7 @@
 #include "base/generic.h"
 
 /**
- * \private
+ * \internal
  * \brief doubly linked list node
  * \typedef doubly_linked_list_node
  */
@@ -26,7 +26,7 @@ typedef struct doubly_linked_list_node doubly_linked_list_node;
 typedef doubly_linked_list_node *doubly_linked_list;
 
 /**
- * \private
+ * \internal
  * \brief doubly linked list node
  * \struct doubly_linked_list_node
  */
