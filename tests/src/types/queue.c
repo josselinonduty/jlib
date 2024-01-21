@@ -6,7 +6,7 @@
 #include "base/int.h"
 #include "base/linked_list.h"
 #include "types/queue.h"
-#include "tests/queue.h"
+#include "tests/types/queue.h"
 
 bool __int_mod_1(any a, any b)
 {

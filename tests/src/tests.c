@@ -1,18 +1,19 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 #include <stdlib.h>
+#include <ncurses.h>
 
-#include "tests/utilities.h"
-#include "tests/int.h"
-#include "tests/string.h"
-#include "tests/array.h"
-#include "tests/linked_list.h"
-#include "tests/doubly_linked_list.h"
-#include "tests/kv_linked_list.h"
-#include "tests/binary_tree.h"
-#include "tests/queue.h"
-#include "tests/stack.h"
-#include "tests/hash_table.h"
+#include "tests/utilities/exchange.h"
+#include "tests/base/int.h"
+#include "tests/base/string.h"
+#include "tests/base/array.h"
+#include "tests/base/linked_list.h"
+#include "tests/base/doubly_linked_list.h"
+#include "tests/base/kv_linked_list.h"
+#include "tests/base/binary_tree.h"
+#include "tests/base/hash_table.h"
+#include "tests/types/queue.h"
+#include "tests/types/stack.h"
 
 int init_suite(void)
 {
@@ -196,6 +197,13 @@ int main(void)
         NULL == CU_add_test(pSuite, "hash_table_remove()", test_hash_table_remove) ||
         NULL == CU_add_test(pSuite, "hash_table_find()", test_hash_table_find) ||
         NULL == CU_add_test(pSuite, "hash_table_destroy()", test_hash_table_destroy))
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    pSuite = CU_add_suite("Vec2D", init_suite, clean_suite);
+    if (NULL == pSuite)
     {
         CU_cleanup_registry();
         return CU_get_error();

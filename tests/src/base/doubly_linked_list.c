@@ -5,7 +5,7 @@
 #include "base/int.h"
 #include "base/string.h"
 
-#include "tests/doubly_linked_list.h"
+#include "tests/base/doubly_linked_list.h"
 
 void test_doubly_linked_list_empty(void)
 {

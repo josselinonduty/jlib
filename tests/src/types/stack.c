@@ -3,7 +3,7 @@
 #include "base/int.h"
 #include "base/linked_list.h"
 #include "types/stack.h"
-#include "tests/stack.h"
+#include "tests/types/stack.h"
 
 void test_stack_create(void)
 {

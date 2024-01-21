@@ -9,7 +9,7 @@
 #include "base/int.h"
 #include "base/string.h"
 
-#include "tests/kv_linked_list.h"
+#include "tests/base/kv_linked_list.h"
 
 string *__kv_linked_list_string_random(int n)
 {

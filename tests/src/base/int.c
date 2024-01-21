@@ -2,7 +2,7 @@
 #include <CUnit/Basic.h>
 
 #include "base/int.h"
-#include "tests/int.h"
+#include "tests/base/int.h"
 
 void test_int_copy(void)
 {

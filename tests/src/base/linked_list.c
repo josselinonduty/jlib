@@ -5,7 +5,7 @@
 #include "base/int.h"
 #include "base/string.h"
 
-#include "tests/linked_list.h"
+#include "tests/base/linked_list.h"
 
 void test_linked_list_empty(void)
 {

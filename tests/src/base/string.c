@@ -1,6 +1,6 @@
 #include <CUnit/CUnit.h>
 #include "base/string.h"
-#include "tests/string.h"
+#include "tests/base/string.h"
 
 void test_string_create(void)
 {
