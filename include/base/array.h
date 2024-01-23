@@ -104,7 +104,6 @@ void array_remove(array *arr, unsigned long int index, generic_free free_fn);
  * \param index The index where to add the element
  * \param element The element to add
  * \param copy_fn The function to copy the element
- * \param free_fn The function to free the element
  *
  * \pre The index is valid
  *

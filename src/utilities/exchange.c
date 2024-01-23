@@ -1,5 +1,5 @@
 /**
- * @file include/utilities/exchange.c
+ * @file utilities/exchange.c
  * @brief Functions related to swapping elements.
  * @author Josselin Dulongcourty
  * @version 1.0.0

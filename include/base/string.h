@@ -23,20 +23,20 @@ typedef char *string;
  * \param str The string to copy
  * \return string
  */
-any string_create(string);
+any string_create(string str);
 
 /**
  * \brief Copies a string
- * \param pstr The pointer to the string to copy
+ * \param str The pointer to the string to copy
  * \return pointer to the copy of the string
  */
-any string_copy(any);
+any string_copy(any str);
 
 /**
  * \brief Frees a string
  * \param str The pointer to the string to free
  */
-void string_free(any);
+void string_free(any str);
 
 /**
  * \brief Compares two strings
@@ -44,19 +44,19 @@ void string_free(any);
  * \param str2 The pointer to the second string
  * \return true if the two strings are equal, false otherwise
  */
-bool string_equal(any, any);
+bool string_equal(any str1, any str2);
 
 /**
  * \brief Prints a string
  * \param str The pointer to the string to print
  */
-void string_print(any);
+void string_print(any str);
 
 /**
  * \brief Hashes a string
  * \param str The pointer to the string to hash
  * \return hash
  */
-hash string_hash(any);
+hash string_hash(any str);
 
 #endif // __STRING_H__
