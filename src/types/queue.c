@@ -3,9 +3,9 @@
 #include <errno.h>
 
 #include "base/generic.h"
-#include "base/int.h"
 #include "base/flags.h"
-#include "base/linked_list.h"
+#include "datatypes/linked_list.h"
+#include "types/int.h"
 #include "types/queue.h"
 
 queue queue_create(flag_sort flag, generic_copy copy_fn, generic_free free_fn, generic_compare order_fn)

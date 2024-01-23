@@ -1,11 +1,9 @@
 #include <CUnit/CUnit.h>
 #include <stdlib.h>
 
-#include "base/linked_list.h"
-#include "base/int.h"
-#include "base/string.h"
-
-#include "tests/base/linked_list.h"
+#include "datatypes/linked_list.h"
+#include "types/int.h"
+#include "types/string.h"
 
 void test_linked_list_empty(void)
 {

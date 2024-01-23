@@ -3,8 +3,8 @@
 #include <assert.h>
 
 #include "base/kv_generic.h"
-#include "base/kv_linked_list.h"
-#include "base/hash_table.h"
+#include "datatypes/kv_linked_list.h"
+#include "datatypes/hash_table.h"
 
 hash_table hash_table_create(long int capacity)
 {

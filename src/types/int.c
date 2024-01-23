@@ -3,8 +3,9 @@
 #include <string.h>
 #include <stdbool.h>
 #include <errno.h>
+
 #include "base/generic.h"
-#include "base/int.h"
+#include "types/int.h"
 
 any int_copy(any value)
 {

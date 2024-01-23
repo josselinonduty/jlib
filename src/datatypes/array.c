@@ -6,7 +6,7 @@
 #include <errno.h>
 
 #include "base/generic.h"
-#include "base/array.h"
+#include "datatypes/array.h"
 
 /**
  * \internal

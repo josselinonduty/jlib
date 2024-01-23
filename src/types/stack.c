@@ -3,9 +3,9 @@
 #include <errno.h>
 
 #include "base/generic.h"
-#include "base/int.h"
-#include "base/linked_list.h"
+#include "types/int.h"
 #include "types/stack.h"
+#include "datatypes/linked_list.h"
 
 stack stack_create(generic_copy copy_fn, generic_free free_fn, generic_compare order_fn)
 {

@@ -3,8 +3,9 @@
 #include <string.h>
 #include <stdbool.h>
 #include <errno.h>
+
 #include "base/generic.h"
-#include "base/string.h"
+#include "types/string.h"
 
 any string_create(string value)
 {

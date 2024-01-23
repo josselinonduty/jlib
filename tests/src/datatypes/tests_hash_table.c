@@ -5,10 +5,10 @@
 
 #include "base/generic.h"
 #include "base/kv_generic.h"
-#include "base/int.h"
-#include "base/string.h"
-#include "base/kv_linked_list.h"
-#include "base/hash_table.h"
+#include "datatypes/kv_linked_list.h"
+#include "datatypes/hash_table.h"
+#include "types/int.h"
+#include "types/string.h"
 
 KV __hash_kv_copy_string_int(KV kv)
 {

@@ -12,7 +12,7 @@
 #include <stdbool.h>
 
 #include "base/kv_generic.h"
-#include "base/kv_linked_list.h"
+#include "datatypes/kv_linked_list.h"
 
 /**
  * \typedef hash_table

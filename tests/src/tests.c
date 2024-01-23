@@ -3,17 +3,17 @@
 #include <stdlib.h>
 #include <ncurses.h>
 
-#include "tests/utilities/exchange.h"
-#include "tests/base/int.h"
-#include "tests/base/string.h"
-#include "tests/base/array.h"
-#include "tests/base/linked_list.h"
-#include "tests/base/doubly_linked_list.h"
-#include "tests/base/kv_linked_list.h"
-#include "tests/base/binary_tree.h"
-#include "tests/base/hash_table.h"
-#include "tests/types/queue.h"
-#include "tests/types/stack.h"
+#include "utilities/tests_swap.h"
+#include "datatypes/tests_array.h"
+#include "datatypes/tests_linked_list.h"
+#include "datatypes/tests_doubly_linked_list.h"
+#include "datatypes/tests_kv_linked_list.h"
+#include "datatypes/tests_binary_tree.h"
+#include "datatypes/tests_hash_table.h"
+#include "types/tests_int.h"
+#include "types/tests_string.h"
+#include "types/tests_queue.h"
+#include "types/tests_stack.h"
 
 int init_suite(void)
 {
@@ -40,7 +40,7 @@ int main(void)
     }
 
     if (
-        NULL == CU_add_test(pSuite, "exchange()", test_utils_exchange))
+        NULL == CU_add_test(pSuite, "swap()", test_utils_swap))
     {
         CU_cleanup_registry();
         return CU_get_error();

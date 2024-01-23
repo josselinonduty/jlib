@@ -5,11 +5,9 @@
 #include <stdbool.h>
 #include <time.h>
 
-#include "base/kv_linked_list.h"
-#include "base/int.h"
-#include "base/string.h"
-
-#include "tests/base/kv_linked_list.h"
+#include "datatypes/kv_linked_list.h"
+#include "types/int.h"
+#include "types/string.h"
 
 string *__kv_linked_list_string_random(int n)
 {

@@ -1,8 +1,9 @@
 #include <CUnit/CUnit.h>
 #include <stdio.h>
+
 #include "base/generic.h"
-#include "base/array.h"
-#include "base/int.h"
+#include "datatypes/array.h"
+#include "types/int.h"
 
 unsigned long int __array_next_capacity(unsigned long int base, unsigned long int size)
 {

@@ -1,9 +1,8 @@
 #include <CUnit/CUnit.h>
 
-#include "base/int.h"
-#include "base/linked_list.h"
+#include "types/int.h"
+#include "datatypes/linked_list.h"
 #include "types/stack.h"
-#include "tests/types/stack.h"
 
 void test_stack_create(void)
 {

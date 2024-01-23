@@ -3,10 +3,9 @@
 
 #include "base/generic.h"
 #include "base/flags.h"
-#include "base/int.h"
-#include "base/linked_list.h"
+#include "datatypes/linked_list.h"
+#include "types/int.h"
 #include "types/queue.h"
-#include "tests/types/queue.h"
 
 bool __int_mod_1(any a, any b)
 {

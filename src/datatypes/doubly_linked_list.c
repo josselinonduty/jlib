@@ -4,7 +4,7 @@
 #include <errno.h>
 
 #include "base/generic.h"
-#include "base/doubly_linked_list.h"
+#include "datatypes/doubly_linked_list.h"
 
 doubly_linked_list doubly_linked_list_create()
 {

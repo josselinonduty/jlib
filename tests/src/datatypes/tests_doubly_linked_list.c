@@ -1,11 +1,9 @@
 #include <CUnit/CUnit.h>
 #include <stdlib.h>
 
-#include "base/doubly_linked_list.h"
-#include "base/int.h"
-#include "base/string.h"
-
-#include "tests/base/doubly_linked_list.h"
+#include "datatypes/doubly_linked_list.h"
+#include "types/int.h"
+#include "types/string.h"
 
 void test_doubly_linked_list_empty(void)
 {
