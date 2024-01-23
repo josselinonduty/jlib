@@ -21,17 +21,17 @@ typedef void *any;
 /**
  * \typedef generic_copy
  * \brief Generic copy function.
- * \return The copy of the given value.
  * \param value The value to copy.
+ * \return The copy of the given value.
  */
-typedef any (*generic_copy)(any);
+typedef any (*generic_copy)(any value);
 
 /**
  * \typedef generic_free
  * \brief Generic free function.
  * \param value The value to free.
  */
-typedef void (*generic_free)(any);
+typedef void (*generic_free)(any value);
 
 /**
  * \typedef generic_compare
@@ -39,14 +39,14 @@ typedef void (*generic_free)(any);
  * \param v1 The first value to compare.
  * \param v2 The second value to compare.
  */
-typedef bool (*generic_compare)(any, any);
+typedef bool (*generic_compare)(any v1, any v2);
 
 /**
  * \typedef generic_print
  * \brief Generic print function.
  * \param value The value to print.
  */
-typedef void (*generic_print)(any);
+typedef void (*generic_print)(any value);
 
 /**
  * \typedef hash
@@ -60,6 +60,6 @@ typedef unsigned long hash;
  * \param value The value to hash.
  * \return The hash of the given value.
  */
-typedef hash (*generic_hash)(any);
+typedef hash (*generic_hash)(any value);
 
 #endif

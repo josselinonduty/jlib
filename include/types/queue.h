@@ -3,8 +3,8 @@
 
 #include <stdbool.h>
 #include "base/generic.h"
-#include "base/linked_list.h"
 #include "base/flags.h"
+#include "datatypes/linked_list.h"
 
 /**
  * @private

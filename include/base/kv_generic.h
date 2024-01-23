@@ -37,14 +37,14 @@ struct KV
  * \param data The data to copy.
  * \return The copy of the given value.
  */
-typedef KV (*KV_copy)(KV);
+typedef KV (*KV_copy)(KV data);
 
 /**
  * \typedef KV_free
  * \brief KV free function.
  * \param data The data to free.
  */
-typedef void (*KV_free)(KV);
+typedef void (*KV_free)(KV data);
 
 /**
  * \typedef KV_compare
@@ -53,14 +53,14 @@ typedef void (*KV_free)(KV);
  * \param data2 The second data to compare.
  * \return True if the two values are equals, false otherwise.
  */
-typedef bool (*KV_compare)(KV, KV);
+typedef bool (*KV_compare)(KV data1, KV data2);
 
 /**
  * \typedef KV_print
  * \brief KV print function.
  * \param data The data to print.
  */
-typedef void (*KV_print)(KV);
+typedef void (*KV_print)(KV data);
 
 /**
  * \typedef KV_hash
@@ -68,6 +68,6 @@ typedef void (*KV_print)(KV);
  * \param data The data to hash.
  * \return The hash of the given value.
  */
-typedef hash (*KV_hash)(KV);
+typedef hash (*KV_hash)(KV data);
 
 #endif // __KV_GENERIC_H__
