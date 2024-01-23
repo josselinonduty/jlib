@@ -118,7 +118,7 @@ clean/docs:
 .PHONY: clean/docs
 
 clean/debug:
-	@rm -f ./$(BINDIR)/.valgrind.log
+	@rm -f ./$(BINDIR)/$(TESTDIR)/.valgrind.log
 .PHONY: clean/debug
 
 install/debian:
