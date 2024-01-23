@@ -122,7 +122,7 @@ clean/debug:
 .PHONY: clean/debug
 
 install/debian:
-	apt-get install libcunit1 libcunit1-doc libcunit1-dev valgrind -y
+	apt-get install libcunit1 libcunit1-doc libcunit1-dev libncurses6 libncursesw6 valgrind -y
 .PHONY: install/debian
 
 changelog:
