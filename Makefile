@@ -1,22 +1,34 @@
+# ------------ Directory structure ------------
+BINDIR=bin
+CC=gcc
+DOCSDIR=docs
+INCLUDEDIR=include
 SRCDIR=src
 TESTDIR=tests
-BINDIR=bin
-INCLUDEDIR=include
-DOCSDIR=docs
-CC=gcc
-CFLAGS=-Wall -pedantic -std=c99 -I$(INCLUDEDIR)
-LDFLAGS=-lm -lcunit -lncurses
-TEST=$(BINDIR)/$(TESTDIR)/run
+# ------------ Library configuration ------------
 LIB=libjlib
-
+SHAREDOBJ=$(SRC:%.c=%.relative.o)
+# ------------ Documentation configuration ------------
 DOCS=doxygen
 DOCSCONFIG=Doxyfile
+# ------------ Debug configuration ------------
 DEBUG=valgrind
 DFLAGS=--leak-check=full --show-leak-kinds=all --track-origins=yes
-
+# ------------ Build configuration ------------
 SRC=$(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/**/*.c)
 OBJ=$(SRC:%.c=%.o)
-SHAREDOBJ=$(SRC:%.c=%.relative.o)
+CFLAGS=-Wall -pedantic -std=c99 -I$(INCLUDEDIR)
+LDFLAGS=-lm -lcunit -lncurses
+# ------------ Test configuration ------------
+TEST=$(BINDIR)/$(TESTDIR)/run
+CFLAGSTEST=-Wall -pedantic -std=c99 -I$(INCLUDEDIR) -I$(TESTDIR)/$(INCLUDEDIR)
+LDFLAGSTEST=$(LDFLAGS) $(BINDIR)/lib/$(LIB).a
+SRCTEST=$(wildcard $(TESTDIR)/$(SRCDIR)/*.c) $(wildcard $(TESTDIR)/$(SRCDIR)/**/*.c)
+OBJTEST=$(SRCTEST:%.c=%.o)
+
+# ---------------------------------
+#               Targets            
+# ---------------------------------
 
 all: build/static
 .PHONY: all
@@ -67,12 +79,6 @@ $(SRCDIR)/%.relative.o: $(SRCDIR)/%.c
 
 $(SRCDIR)/%/%.relative.o: $(SRCDIR)/%/%.c
 	@$(CC) -fPIC -o $@ -c $< $(CFLAGS)
-
-CFLAGSTEST=-Wall -pedantic -std=c99 -I$(INCLUDEDIR) -I$(TESTDIR)/$(INCLUDEDIR)
-LDFLAGSTEST=$(LDFLAGS) $(BINDIR)/lib/$(LIB).a
-
-SRCTEST=$(wildcard $(TESTDIR)/$(SRCDIR)/*.c) $(wildcard $(TESTDIR)/$(SRCDIR)/**/*.c)
-OBJTEST=$(SRCTEST:%.c=%.o)
 
 tests: $(TEST)
 	@./$(TEST)
