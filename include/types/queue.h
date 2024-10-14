@@ -1,3 +1,11 @@
+/**
+ * @file queue.h
+ * @brief Types and functions for queue
+ * @author Josselin Dulongcourty
+ * @version 1.0.0
+ * @date 2024-01-23
+ */
+
 #ifndef __QUEUE_H__
 #define __QUEUE_H__
 

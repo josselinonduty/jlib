@@ -14,6 +14,7 @@
 #include "types/tests_string.h"
 #include "types/tests_queue.h"
 #include "types/tests_stack.h"
+#include "types/tests_set.h"
 
 int init_suite(void)
 {
@@ -202,8 +203,15 @@ int main(void)
         return CU_get_error();
     }
 
-    pSuite = CU_add_suite("Vec2D", init_suite, clean_suite);
+    pSuite = CU_add_suite("Set", init_suite, clean_suite);
     if (NULL == pSuite)
+    {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    if (NULL == CU_add_test(pSuite, "set_create()", test_set_create) ||
+        NULL == CU_add_test(pSuite, "set_add()", test_set_add))
     {
         CU_cleanup_registry();
         return CU_get_error();

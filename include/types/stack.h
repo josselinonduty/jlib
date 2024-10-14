@@ -1,3 +1,11 @@
+/**
+ * @file stack.h
+ * @brief Types and functions for stack
+ * @author Josselin Dulongcourty
+ * @version 1.0.0
+ * @date 2024-01-23
+ */
+
 #ifndef __STACK_H__
 #define __STACK_H__
 
